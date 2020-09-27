@@ -1,0 +1,68 @@
+<Plugin OnCommand = "%xero(function(self)
+	local string_gmatch = string.gfind or string.gmatch
+	function mod_insert(beat, len, modstring, t, pn)
+		if t == 'end' then len = len - beat end
+		for str in string_gmatch(modstring, '[^,]+') do
+			local str = string.gsub(str, '%%', '')
+			local activation_rate = 1
+			local percent = 100
+			local modname = nil
+			for part in string_gmatch(str, '[^ ]+') do
+				if string.find(part, '*') then
+					activation_rate = tonumber(string.sub(part, 2)) or activation_rate
+				elseif not string.find(part, '[^%d]') then
+					percent = tonumber(part) or (part == 'no' and 0) or percent
+				elseif string.find(part, '^%d+x$') then
+					local _, x = string.match(part, '^(%d+)x$')
+					modname = 'xmod'
+					percent = tonumber(x)
+				elseif string.find(part, '^c%d+$') then
+					local _, c = string.match(part, '^c(%d+)$')
+					modname = 'cmod'
+					percent = tonumber(c)
+				else
+					modname = part
+				end
+			end
+			if modname then
+				if activation_rate < 0 or activation_rate > 9998 then
+					set {beat, percent, modname, plr = pn}
+				elseif activation_rate == 0 then
+					-- do nothing
+				else -- activation_rate > 0
+					error('modstring \'' .. str .. '\' needs a *-1 activation rate to work with the Mirin Template backend.')
+				end
+			end
+		end
+	end
+
+	function mod2_insert() error 'mod2_insert is unsupported' end
+	function mod_ease(beat, len, str1, str2, mod, t, eas, pn, sus, opt1, opt2)
+		if t == 'end' then len = len - beat end
+		set {beat, str1, mod, plr = pn}
+		ease {beat, len, eas, str2, mod, plr = pn}
+		-- intentionally ignore sus, opt1, opt2
+	end
+
+	function mod_perframe(start_beat, end_beat, f)
+		func {start_beat, end_beat, f, mode = 'end'}
+	end
+
+	function mod_message(beat, msg, p)
+		func {
+			beat,
+			function(actual_beat)
+				if actual_beat < beat + 1
+					or p == true
+					or (type(p) == 'number' and actual_beat < p + beat)
+						then
+					if type(msg) == 'string' then
+						SCREENMAN:SystemMessage(msg)
+					else
+						msg()
+					end
+				end
+			end
+		}
+	end
+end)" />

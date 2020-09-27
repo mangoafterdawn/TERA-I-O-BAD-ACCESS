@@ -17,7 +17,11 @@
 #BPMS:0.000=150.000;
 #STOPS:;
 #BGCHANGES:;
-#FGCHANGES:;
+
+//The majority of simfile scripts and visual effects are stored here.
+#FGCHANGES:0.000=template/main.xml=1.000=0=0=1=====,
+;
+
 //--------------- dance-single - notedata ----------------
 #NOTES:
      dance-single:

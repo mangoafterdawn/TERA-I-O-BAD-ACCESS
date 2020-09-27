@@ -1,0 +1,33 @@
+<ActorFrame InitCommand="%function(self)
+	function nitg_send_spellcards(cards)
+		if table.getn(cards) == 0 or tonumber(GAMESTATE:GetVersionDate()) < 20170714 then return false end
+		
+		local s = GAMESTATE:GetCurrentSong()
+		s:SetNumSpellCards(table.getn(cards))
+		for i=1,table.getn(cards) do
+			local a = cards[i]
+			s:SetSpellCardTiming(i-1,a[1],a[2])
+			s:SetSpellCardName(i-1,a[3])
+			s:SetSpellCardDifficulty(i-1,a[4])
+			s:SetSpellCardColor(i-1,a[5][1],a[5][2],a[5][3],a[5][4])
+		end
+		
+	end
+	
+	function nitg_send_labels(labels)
+		if table.getn(labels) == 0 or tonumber(GAMESTATE:GetVersionDate()) < 20170714 then return false end
+		
+		local s = GAMESTATE:GetCurrentSong()
+		s:ClearLabels();
+		for i=1,table.getn(labels) do
+			s:AddLabel(labels[i][1],labels[i][2])
+		end
+		
+	end
+	
+	--start,end,name,difficulty,color
+	prefix_spellcards = {
+
+	}
+	nitg_send_spellcards(prefix_spellcards)
+end"/>
