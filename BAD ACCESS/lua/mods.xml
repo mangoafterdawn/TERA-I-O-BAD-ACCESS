@@ -22,14 +22,42 @@
 		setupProxy(PJ[pn], P[pn]:GetChild('Judgment'), pn)
 	end
 	-- your code goes here here:
-	
+	--im putting all initial bg stuff here :]
+mang_initial[1]:xy(scx,scy)
+mang_initial[1]:diffuse(0,0,0,1)
+mang_initial[1]:zoomto(sw,sh)
+mang_initial[1]:hidden(0)
+
+mang_aftsprite1:xy(scx,scy)
+mang_aftsprite1:hidden(0)
+mang_aftsprite1:SetTexture(mang_aft1:GetTexture())
+
+mang_aft1:xy(scx,scy)
+mang_aft1:hidden(0)
+	--im putting all initial mods stuff here :]
+func{0,function(beat)
+	for i=1,2 do	
+		PP[i]:x(scx)
+	end
+end}
+set{0,2,'xmod',
+	200,'zoomz',
+	100,'stealthpastreceptors'
+
+}
+	--end
 end)"
 Type = "ActorFrame"
 ><children>
-	<Layer File = "spellcards.xml"/>
+	
+	<Layer Type = "Quad" Name = "mang_initial[1]" />
+	
+	<Layer Type = "Sprite" InitCommand = "%xero.sprite" Name = "mang_aftsprite1" />
 
-	<Layer File = "mang/default.xml"/>
-	<Layer File = "yasmyn64/default.xml"/>
+	<Layer File = "spellcards.xml" />
+
+	<Layer File = "mang/default.xml" />
+	<Layer File = "yasmyn64/default.xml" />
 
 	<Layer Type = "ActorProxy" Name = "PC[1]" />
 	<Layer Type = "ActorProxy" Name = "PC[2]" />
@@ -37,5 +65,7 @@ Type = "ActorFrame"
 	<Layer Type = "ActorProxy" Name = "PJ[2]" />
 	<Layer Type = "ActorProxy" Name = "PP[1]" />
 	<Layer Type = "ActorProxy" Name = "PP[2]" />
-	
+
+	<Layer Type = "ActorFrameTexture" InitCommand = "%xero.aft" Name = "mang_aft1" />	
+
 </children></Mods>
