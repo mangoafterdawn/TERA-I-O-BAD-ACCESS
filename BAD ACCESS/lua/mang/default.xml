@@ -69,16 +69,17 @@ ease{228,3,outExpo,100,'stealth',
 }
 for i=0,3 do
 	if i>0 then
-	ease{227+i*8,1,inQuad,100,'stealth',
+	ease{227+i*8,2,inQuad,100,'stealth',
 		100,'dark',
 		100,'hidenoteflashes',
-		3000,'longholds'
+		0,'longholds'
 	}
 	ease{227+i*8,1,outExpo,50,'stealth'}
 	end
-	
-	set{231+i*8,-50,'flip'}
-	ease{232+i*8,3,outExpo,0,'dark0',
+	set{231+i*8,-100,'flip',
+		pie*0.5,'confusionoffset'
+	}
+	ease{232+i*8,3,outQuint,0,'dark0',
 		0,'dark1',
 		0,'dark3',
 		0,'dark',
@@ -86,13 +87,19 @@ for i=0,3 do
 		0,'longholds',
 		0,'flip',
 		0,'stealth',
+		0,'confusionoffset'
+	}
+	ease{232+i*8,3,popElastic[1][2],-120,'movey',
+		40,'flip',
+		200,'tinyx',
+		-100,'tinyy'
 	}
 end
 --glitchy stuff
 mang_aftsprite1:diffusealpha(0.9)
 mang_aftsprite1:hidden(1)
 set{234,300,'bumpyxperiod',
-	-10,'digitalperiod'
+	100,'digitalxperiod'
 }
 func{234,function(beat)
 	mang_aftsprite1:hidden(0)
@@ -118,7 +125,7 @@ for j=0,3 do
 		set{232+j*8,0,'sudden'}
 		ease{234+i*0.125+j*8,0.125,outExpo,40*inv,'bumpyx',
 			40*inv,'zigzag',
-			90*inv,'digital',
+			90*inv,'digitalx',
 			-90*inv,'sawtooth',
 		}
 		ease{234+i*0.125+j*8,0.125,outExpo,10*inv,'spiralx',
@@ -126,9 +133,9 @@ for j=0,3 do
 		plr=2}
 		ease{234+i*0.125+j*8,0.125,outExpo,100*inv,'tiny',
 		plr=1}
-		ease{236+i*0.125+j*8,4,outExpo,0,'bumpyx',
+		ease{236+j*8,4,outExpo,0,'bumpyx',
 			0,'zigzag',
-			0,'digital',
+			0,'digitalx',
 			0,'sawtooth',
 			0,'tinyz',
 			0,'tiny',
@@ -143,19 +150,22 @@ for j=0,3 do
 		}
 		ease{236+i*0.125+j*8,0.125,outExpo,0*inv,'spiralx',plr=2}
 	end
-	for i=0,28 do
-		local switch=i%2+0.9
+	for i=0,14 do
+		local switch=i%2+1
 		ease{234+i*0.125+j*8,0.125,outExpo,50*switch,'stealth',
 		plr=2}
+		ease{236+j*8,4,outExpo,100,'stealth'}
 	end
 	for i=0,7 do
 		local inv=2*(i%2)-1
+		local switch=(i+1)%2
 		ease{234+i*0.25+j*8,0.25,outExpo,5*inv,'skewy',
 			-5*inv,'noteskewy',
 			10*inv,'rotationy',
 			10*inv,'rotationx',
 			-10*inv,'confusionyoffset',
-			100,'orient'
+			100,'orient',
+			100*switch,'invert'
 		}
 	end
 end
