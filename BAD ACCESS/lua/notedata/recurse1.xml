@@ -1,0 +1,8 @@
+<CODE Type="Quad" OnCommand="hidden,1"
+InitCommand="%function(self)
+recurse1 = {
+	{19.000,0,1},
+	{227.000,0,1},
+	{475.000,0,1},
+}
+end"/>

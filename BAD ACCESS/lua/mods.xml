@@ -23,6 +23,11 @@
 	end
 	-- your code goes here here:
 	--im putting all initial bg stuff here :]
+vignette[1]:hidden(0)
+vignette[1]:blend('modulate')
+vignette[1]:xy(scx,scy)
+vignette[1]:zoomto(sw*2,sw*2)
+
 mang_initial[1]:xy(scx,scy)
 mang_initial[1]:diffuse(0,0,0,1)
 mang_initial[1]:zoomto(sw,sh)
@@ -34,6 +39,29 @@ mang_aftsprite1:SetTexture(mang_aft1:GetTexture())
 
 mang_aft1:xy(scx,scy)
 mang_aft1:hidden(0)
+
+solarize[1]:hidden(0)
+solarize[1]:diffuse(1,1,1,0)
+solarize[1]:blend('invertdest')
+solarize[1]:xy(scx,scy)
+solarize[1]:zoomto(sw,sh)
+
+solarize[2]:hidden(0)
+solarize[2]:diffuse(1,1,1,0)
+solarize[2]:blend('invertdest')
+solarize[2]:xy(scx,scy)
+solarize[2]:zoomto(sw,sh)
+
+mang_BA[1]:hidden(1)
+mang_BA[1]:xy(scx-(scx*0.02),(scy*2-(scy*-0.08))*0.3)
+mang_BA[1]:zoomto(sw*0.95,sw*0.35)
+mang_BA[1]:SetTextureFiltering(false)
+
+mang_BA[2]:hidden(1)
+mang_BA[2]:xy(scx-(scx*-0.02),(scy*2-(scy*0.08))*0.75)
+mang_BA[2]:zoomto(sw*0.95,sw*0.35)
+mang_BA[2]:SetTextureFiltering(false)
+
 	--im putting all initial mods stuff here :]
 func{0,function(beat)
 	for i=1,2 do	
@@ -42,10 +70,112 @@ func{0,function(beat)
 end}
 set{0,2,'xmod',
 	200,'zoomz',
-	100,'stealthpastreceptors'
-
+	100,'stealthpastreceptors',
+	1,'alphastealth0',
+	1,'alphastealth1',
+	1,'alphastealth2',
+	1,'alphastealth3',
+	1,'recursezoom',
 }
-	--end
+--local functions
+--col specific alphastealth
+--all col
+local function alphastealth(amt)
+	for col=0,3 do
+		for i=1,2 do
+			P[i]:SetNumArrowGradientPoints(col,1)
+			P[i]:SetArrowGradientPoint(0,col,1)
+			P[i]:SetArrowGradientColor(0,col,1,1,1,amt)
+		end
+	end
+end
+aux 'alphastealth'
+node{'alphastealth',alphastealth}
+
+local function alphastealth0(amt)
+	for i=1,2 do
+		P[i]:SetNumArrowGradientPoints(0,1)
+		P[i]:SetArrowGradientPoint(0,0,1)
+		P[i]:SetArrowGradientColor(0,0,1,1,1,amt)
+	end
+end
+aux 'alphastealth0'
+node{'alphastealth0',alphastealth0}
+--col 1
+local function alphastealth1(amt)
+	for i=1,2 do
+		P[i]:SetNumArrowGradientPoints(1,1)
+		P[i]:SetArrowGradientPoint(0,1,1)
+		P[i]:SetArrowGradientColor(0,1,1,1,1,amt)
+	end
+end
+aux 'alphastealth1'
+node{'alphastealth1',alphastealth1}
+--col 2
+local function alphastealth2(amt)
+	for i=1,2 do
+		P[i]:SetNumArrowGradientPoints(2,1)
+		P[i]:SetArrowGradientPoint(0,2,1)
+		P[i]:SetArrowGradientColor(0,2,1,1,1,amt)
+	end
+end
+aux 'alphastealth2'
+node{'alphastealth2',alphastealth2}
+--col 3
+local function alphastealth3(amt)
+	for i=1,2 do
+		P[i]:SetNumArrowGradientPoints(3,1)
+		P[i]:SetArrowGradientPoint(0,3,1)
+		P[i]:SetArrowGradientColor(0,3,1,1,1,amt)
+	end
+end
+aux 'alphastealth3'
+node{'alphastealth3',alphastealth3}
+
+--the rest
+local function recursezoom(amt)
+	mang_aftsprite1:zoom(amt)
+end
+aux 'recursezoom'
+node{'recursezoom',recursezoom}
+
+local function recurse1(amt)
+	mang_aftsprite1:diffusealpha(amt)
+end
+aux 'recursediff'
+node{'recursediff',recurse1}
+
+local function recursevelocityx(amt)
+	mang_aftsprite1:x(scx+amt)
+end
+aux 'recursevx'
+node{'recursevx',recursevelocityx}
+
+local function recursevelocityy(amt)
+	mang_aftsprite1:y(scy+amt)
+end
+aux 'recursevy'
+node{'recursevy',recursevelocityy}
+
+local function noteinvertdest(amt)
+	solarize[1]:diffusealpha(amt)
+	solarize[2]:diffusealpha(amt)
+end
+aux 'noteinv'
+node{'noteinv',noteinvertdest}
+
+local function baa1(amt)
+	mang_BA[1]:zoom(amt)
+end
+aux 'baa1zoom'
+node{'baa1zoom',baa1}
+
+local function baa2(amt)
+	mang_BA[2]:zoom(amt)
+end
+aux 'baa2zoom'
+node{'baa2zoom',baa2}
+
 end)"
 Type = "ActorFrame"
 ><children>
@@ -56,15 +186,28 @@ Type = "ActorFrame"
 
 	<Layer File = "spellcards.xml" />
 
+
 	<Layer File = "mang/default.xml" />
 	<Layer File = "yasmyn64/default.xml" />
+
+	<Layer File = "notedata/recurse1.xml" />
+	<Layer File = "notedata/synth.xml" />
 
 	<Layer Type = "ActorProxy" Name = "PC[1]" />
 	<Layer Type = "ActorProxy" Name = "PC[2]" />
 	<Layer Type = "ActorProxy" Name = "PJ[1]" />
 	<Layer Type = "ActorProxy" Name = "PJ[2]" />
+
+	<Layer Type = "Quad" Name = "solarize[2]" />
+
 	<Layer Type = "ActorProxy" Name = "PP[1]" />
 	<Layer Type = "ActorProxy" Name = "PP[2]" />
+
+	<Layer Type = "Quad" Name = "solarize[1]" />
+
+	<Layer File = "vignette.png" Name = "vignette[1]" />
+	<Layer File = "mang/elements/BA1.png" Name = "mang_BA[1]" />
+	<Layer File = "mang/elements/BA2.png" Name = "mang_BA[2]" />
 
 	<Layer Type = "ActorFrameTexture" InitCommand = "%xero.aft" Name = "mang_aft1" />	
 

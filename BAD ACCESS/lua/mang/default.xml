@@ -54,124 +54,256 @@ inSine outSine inOutSine]]--
 local pi,pie=math.pi,math.pi*100
 --local inv=2*(i%2)-1
 --local switch=i%2
-
-ease{227,1,inCirc,50,'flip',
+set{0,50,'flip',
+	100,'dark',
+	1,'alphastealth',
+	1,'recursezoom'
 }
-ease{227,1,outExpo,100,'dark0',
+for i=0,1 do
+	add{12+4*i,2,pop,-30,'dark',
+	}
+	add{12+4*i,4,pop,100,'tipsy',
+		-100,'drunk'
+	}
+end
+ease{4,20,inExpo,0,'dark', --lol
+	0,'flip',
+m=e}
+--CIRCULAR...CIRCULAR!!!
+func{0,20, function(beat)
+    for pn = 1, 2 do
+        for col = 0, 3 do
+			local pi=math.pi
+            local period=(beat*(beat/16)+col*2)*pi/4-(150*pn)
+            local x=(beat-20)*50*math.cos(period)
+            local z=(beat-20)*50*math.sin(period)
+            GAMESTATE:ApplyModifiers('*-1 '..x..' movex'..col..',*-1 '..z..' movez'..col, pn)
+        end
+    end
+end}
+--residual
+set{20,0,'movex',
+	0,'movez'
+}
+
+--[[func{0,function(beat)
+	GAMESTATE:ForceSmoothLines(0)
+end}
+set{0,1000,'arrowpathgirth'}]]--
+
+
+ease{52,4,linear,1000,'stealth',1000,'sudden'}
+
+--relating to the drills
+
+ease{227,4,outQuad,100,'dark0',
 	100,'dark1',
 	100,'dark3',
 }
-ease{228,3,outExpo,100,'stealth',
-	100,'dark',
-	100,'hidenoteflashes',
-	3000,'longholds',
-	1000,'tipsyspeed'
-}
-for i=0,3 do
-	if i>0 then
-	ease{227+i*8,2,inQuad,100,'stealth',
+for k,v in ipairs(recurse1) do
+	ease{v[1],1,inCirc,50,'flip',
+	}
+	ease{v[1]+1,3,outExpo,100,'stealth',
 		100,'dark',
 		100,'hidenoteflashes',
-		0,'longholds'
+		3000,'longholds',
+		1000,'tipsyspeed'
 	}
-	ease{227+i*8,1,outExpo,50,'stealth'}
+	for i=0,3 do
+		if i>0 then
+		ease{v[1]+i*8,2,inQuad,100,'stealth',
+			100,'dark',
+			100,'hidenoteflashes',
+			0,'longholds'
+		}
+		ease{v[1]+i*8,1,outExpo,50,'stealth'}
+		end
+		set{v[1]+4+i*8,-100,'flip',
+			pie*0.5,'confusionoffset'
+		}
+		ease{v[1]+5+i*8,3,outQuint,0,'dark0',
+			0,'dark1',
+			0,'dark3',
+			0,'hidenoteflashes',
+			0,'longholds',
+			0,'flip',
+			0,'stealth',
+			0,'confusionoffset'
+		}
+		ease{v[1]+5+i*8,3,outQuint,0,'dark'}
+		ease{v[1]+5+i*8,3,popElastic[1][2],-220,'movey',
+			40,'flip',
+			200,'tinyx',
+			-100,'tinyy',
+			-100,'drunk',
+			-300,'tipsy'
+		}
 	end
-	set{231+i*8,-100,'flip',
-		pie*0.5,'confusionoffset'
-	}
-	ease{232+i*8,3,outQuint,0,'dark0',
-		0,'dark1',
-		0,'dark3',
-		0,'dark',
-		0,'hidenoteflashes',
-		0,'longholds',
-		0,'flip',
-		0,'stealth',
-		0,'confusionoffset'
-	}
-	ease{232+i*8,3,popElastic[1][2],-120,'movey',
-		40,'flip',
-		200,'tinyx',
-		-100,'tinyy'
+	--glitchy stuff
+	mang_aftsprite1:diffusealpha(0.9)
+	mang_aftsprite1:hidden(1)
+	func{v[1]+7,function(beat)
+		mang_aftsprite1:hidden(0)
+	end}
+	for j=0,3 do
+		for i=0,14 do 
+			local switch=i%2+0.96
+			local inv=2*(i%3)-1
+			local inv2=4*(i%3)-1
+
+			func{v[1]+7+i*0.125+j*8,function(beat)
+				mang_aftsprite1:diffusealpha(switch)
+				mang_aftsprite1:xy(scx+(3*inv),scy+(1*inv2))
+
+				PJ[1]:xy(scx*0.5+math.random()*20*inv,scy+math.random()*20*inv)
+				PJ[2]:xy(scx*1.5+math.random()*20*inv,scy+math.random()*20*inv)
+			end}
+			func{v[1]+9+j*8,function(beat)
+				mang_aftsprite1:diffusealpha(0)
+				PJ[1]:xy(scx*0.5,scy)
+				PJ[2]:xy(scx*1.5,scy)
+			end}
+			set{v[1]+5+j*8,0,'sudden'}
+			ease{v[1]+7+i*0.125+j*8,0.125,outExpo,
+				--40*inv,'bumpyx',
+				50*inv,'zigzag',
+			}
+			ease{v[1]+7+i*0.125+j*8,0.125,outExpo,
+				--10*inv,'spiralx',
+				-1500*inv,'tinyz',
+			plr=2}
+			ease{v[1]+7+i*0.125+j*8,0.125,outExpo,100*inv,'tiny',
+			plr=1}
+			ease{v[1]+9+j*8,4,outExpo,
+				--0,'bumpyx',
+				0,'zigzag',
+				0,'tinyz',
+				0,'tiny',
+				--0,'spiralx',
+				100,'sudden',
+				0,'skewy',
+				0,'noteskewy',
+				0,'rotationx',
+				0,'orient'
+			}
+			ease{v[1]+9+i*0.125+j*8,0.125,outExpo,0*inv,'spiralx',plr=2}
+		end
+		for i=0,14 do
+			local switch=i%2+1
+			local switch0=i%2
+			ease{v[1]+7+i*0.125+j*8,0.125,outExpo,50*switch,'stealth',plr=2}
+			ease{v[1]+9+j*8,4,outExpo,100,'stealth'}
+			set{v[1]+7+i*0.125+j*8,1*switch0,'noteinv'}
+		end
+		for i=0,7 do
+			local inv=2*(i%2)-1
+			local switch=(i+1)%2
+			ease{v[1]+7+i*0.25+j*8,0.25,outExpo,5*inv,'skewy',
+				-5*inv,'noteskewy',
+				5*inv,'rotationx',
+				20,'orient',
+				100*switch,'invert'
+			}
+		end
+	end
+	ease{v[1]+9+27,1,outExpo,0,'stealth',
+		0,'sudden'
 	}
 end
---glitchy stuff
-mang_aftsprite1:diffusealpha(0.9)
-mang_aftsprite1:hidden(1)
-set{234,300,'bumpyxperiod',
-	100,'digitalxperiod'
+--error messages
+ease{112.5,4,outExpo,0.999,'recursediff',
+	0,'recursevx',
+	0,'recursevy',
+	1.025,'recursezoom',
 }
-func{234,function(beat)
-	mang_aftsprite1:hidden(0)
+ease{112.5,0.5,outBack,1.5,'baa1zoom'}
+ease{113,0.5,outElastic,1.5,'baa2zoom'}
+
+func{112,function(beat)
+	mang_BA[1]:hidden(0)
+	mang_BA[1]:zoom(0)
 end}
-for j=0,3 do
-	for i=0,14 do 
-		local switch=i%2+0.96
-		local inv=2*(i%3)-1
-		local inv2=4*(i%3)-1
-
-		func{234+i*0.125+j*8,function(beat)
-			mang_aftsprite1:diffusealpha(switch)
-			mang_aftsprite1:xy(scx+(3*inv),scy+(1*inv2))
-
-			PJ[1]:xy(scx*0.5+math.random()*10*inv,scy+math.random()*10*inv)
-			PJ[2]:xy(scx*1.5+math.random()*10*inv,scy+math.random()*10*inv)
-		end}
-		func{236+j*8,function(beat)
-			mang_aftsprite1:diffusealpha(0)
-			PJ[1]:xy(scx*0.5,scy)
-			PJ[2]:xy(scx*1.5,scy)
-		end}
-		set{232+j*8,0,'sudden'}
-		ease{234+i*0.125+j*8,0.125,outExpo,40*inv,'bumpyx',
-			40*inv,'zigzag',
-			90*inv,'digitalx',
-			-90*inv,'sawtooth',
-		}
-		ease{234+i*0.125+j*8,0.125,outExpo,10*inv,'spiralx',
-			-1500*inv,'tinyz',
-		plr=2}
-		ease{234+i*0.125+j*8,0.125,outExpo,100*inv,'tiny',
-		plr=1}
-		ease{236+j*8,4,outExpo,0,'bumpyx',
-			0,'zigzag',
-			0,'digitalx',
-			0,'sawtooth',
-			0,'tinyz',
-			0,'tiny',
-			0,'spiralx',
-			100,'sudden',
-			0,'skewy',
-			0,'noteskewy',
-			0,'rotationx',
-			0,'rotationy',
-			0,'confusionyoffset',
-			0,'orient'
-		}
-		ease{236+i*0.125+j*8,0.125,outExpo,0*inv,'spiralx',plr=2}
-	end
-	for i=0,14 do
-		local switch=i%2+1
-		ease{234+i*0.125+j*8,0.125,outExpo,50*switch,'stealth',
-		plr=2}
-		ease{236+j*8,4,outExpo,100,'stealth'}
-	end
-	for i=0,7 do
-		local inv=2*(i%2)-1
-		local switch=(i+1)%2
-		ease{234+i*0.25+j*8,0.25,outExpo,5*inv,'skewy',
-			-5*inv,'noteskewy',
-			10*inv,'rotationy',
-			10*inv,'rotationx',
-			-10*inv,'confusionyoffset',
-			100,'orient',
-			100*switch,'invert'
-		}
-	end
-end
-ease{264,1,outExpo,0,'stealth',
-	0,'sudden'
+func{112.5,function(beat)
+	mang_BA[2]:hidden(0)
+	mang_BA[2]:zoom(0)
+end}
+ease{114,0.25,outExpo,100,'invert'}
+func{114,function(beat)
+	mang_BA[1]:blend('invertdest')
+	mang_BA[2]:blend('invertdest')
+end}
+ease{114,2,outExpo,-360,'rotationy',
+	pie*2,'confusionyoffset',
+	0,'invert',
+	-1000,'tinyz',
+	100,'zigzag',
+	--100,'wireframe',
 }
+ease{114,1,outExpo,50,'zoom'}
+ease{115,1,inExpo,100,'zoom'}
+for i=0,15 do
+	local switch=(i+1)%2
+	set{114+i*0.125,100*switch,'wireframe'}
+end
+func{116,function(beat)
+	mang_BA[1]:hidden(1)
+	mang_BA[2]:hidden(1)
+end}
+ease{116,1,pop,-6000,'tinyz'}
+ease{116,4,outExpo,0,'zigzag',
+	1,'recursezoom',
+	0,'recursediff',
+	0,'tinyz'
+}
+--various recursive aft messing abouts
+ease{80.25,2,inExpo,0.98,'recursediff',
+	6,'recursevy',
+	0,'recursevx'
+}
+ease{81,3,inQuad,0,'recursevy',
+}
+ease{84,1,outQuad,0,'recursediff'}
+
+ease{129.5,0.5,inQuad,1,'recursediff',
+	3,'recursevy'
+}
+ease{130,2,outQuad,50,'stealth'}
+ease{131,1,inExpo,0,'stealth',
+	0,'recursevy',
+	0,'recursediff'
+}
+ease{132,1,pop,-4000,'tinyz'}
+
+--relating to the calm synth bit
+set{260,70,'tipsyspeed'}
+	{272,0,'rotationy',
+		0,'confusionyoffset'
+	}
+ease{260,16,outExpo,360,'rotationy',
+	-2*pie,'confusionyoffset',
+	-25,'flip',
+	20,'tipsy',
+	20,'drunk'
+}
+
+ease{260,1,outExpo,100,'dark0',
+	100,'dark1',
+	100,'dark2',
+	100,'dark3',
+	0.025,'alphastealth'
+}
+
+for i,v in ipairs(synth) do
+	local col=i%4
+	local switch=(i+1)%2
+	add{v[1],1,pop,-40,'dark'..col}
+	add{v[1],3,pop,0.2,'alphastealth'..col}
+	add{v[1],3,outExpo,45,'rotationy',
+	-0.25*pie,'confusionyoffset'}
+end
+for i=0,3 do
+	ease{260,8,outSine,99,'dark'..i}
+end
 
 end)"
 Type = "ActorFrame"
