@@ -23,18 +23,51 @@
 	end
 	-- your code goes here here:
 	--im putting all initial bg stuff here :]
-vignette[1]:hidden(0)
+
+vignette[1]:hidden(1)
 vignette[1]:blend('modulate')
 vignette[1]:xy(scx,scy)
 vignette[1]:zoomto(sw*2,sw*2)
+vignette[1]:diffusealpha(0.001)
+
+vignette[2]:hidden(0)
+vignette[2]:blend('subtract')
+vignette[2]:xy(scx,scy)
+vignette[2]:zoomto(sw,sw)
+
+gradient_full:hidden(0)
+gradient_full:diffuse(1,0.8,0.9,1)
+gradient_full:xy(scx,scy)
+gradient_full:zoomto(sw,sh)
+
+gradient:hidden(0)
+gradient:diffuse(1,0.8,0.9,1)
+gradient:xy(scx,scy)
+gradient:zoomto(sw,sh)
+
+star[1]:hidden(0)
+star[1]:xy((math.random()*100)*scx*0.02,scy*3)
+star[1]:diffusealpha(0.2)
+star[1]:blend('add')
+star[1]:zoomto(sw*0.25,sw*0.25)
+
+star[2]:hidden(1)
+star[2]:xy(scx,scy)
+star[2]:zoomto(sw*0.05,sw*0.05)
 
 mang_initial[1]:xy(scx,scy)
 mang_initial[1]:diffuse(0,0,0,1)
 mang_initial[1]:zoomto(sw,sh)
 mang_initial[1]:hidden(0)
 
+mang_initial[2]:xy(scx,scy)
+mang_initial[2]:diffuse(0.5*0.3,0.1*0.3,0.1*0.3,1)
+mang_initial[2]:zoomto(sw,sh)
+mang_initial[2]:hidden(0)
+
 mang_aftsprite1:xy(scx,scy)
 mang_aftsprite1:hidden(0)
+mang_aftsprite1:SetTextureFiltering(false)
 mang_aftsprite1:SetTexture(mang_aft1:GetTexture())
 
 mang_aft1:xy(scx,scy)
@@ -62,6 +95,27 @@ mang_BA[2]:xy(scx-(scx*-0.02),(scy*2-(scy*0.08))*0.75)
 mang_BA[2]:zoomto(sw*0.95,sw*0.35)
 mang_BA[2]:SetTextureFiltering(false)
 
+mang_BA[3]:hidden(1)
+mang_BA[3]:xy(scx,scy)
+mang_BA[3]:zoomto(sw*1,sh*0.6)
+mang_BA[3]:SetTextureFiltering(false)
+
+for i=1,4 do
+	mang_BA2[i]:hidden(0)
+	mang_BA2[i]:xy(scx,scy)
+	mang_BA2[i]:zoom(2)
+	mang_BA2[i]:diffusealpha(0.25)
+	mang_BA2[i]:blend('modulate')
+	mang_BA2[i]:SetTextureFiltering(false)
+	mang_BA2[i]:vibrate(1)
+	mang_BA2[i]:effectmagnitude(sw/4,sh/4,0)
+end
+
+FishSprite:SetTexture(FishAft:GetTexture())
+FishSprite:hidden(1)
+FishSprite:SetTextureFiltering(false)
+FishSprite:GetShader():uniform1f('amount',0)
+
 	--im putting all initial mods stuff here :]
 func{0,function(beat)
 	for i=1,2 do	
@@ -76,11 +130,25 @@ set{0,2,'xmod',
 	1,'alphastealth2',
 	1,'alphastealth3',
 	1,'recursezoom',
+	1,'judgezoom',
+	3*scy,'grad1posy',
+	5*scy,'grad2posy',
+	scy*3,'stary',
 }
 --local functions
 --col specific alphastealth
---all col
-local function alphastealth(amt)
+aux{'alphastealth0','alphastealth1','alphastealth2','alphastealth3'}
+func{0,9e9,function(beat,poptions)
+  for pn = 1,2 do
+    for col = 0,3 do
+      P[pn]:SetNumArrowGradientPoints(col,1)
+      P[pn]:SetArrowGradientPoint(0,col,1)
+      P[pn]:SetArrowGradientColor(0,col,1,1,1,poptions[pn]['alphastealth'..col])
+    end
+  end
+end}
+
+--[[local function alphastealth(amt)
 	for col=0,3 do
 		for i=1,2 do
 			P[i]:SetNumArrowGradientPoints(col,1)
@@ -130,9 +198,25 @@ local function alphastealth3(amt)
 	end
 end
 aux 'alphastealth3'
-node{'alphastealth3',alphastealth3}
+node{'alphastealth3',alphastealth3}]]--
 
 --the rest
+local function thecamellia(hits)
+	for i=1,4 do
+		mang_BA2[i]:effectmagnitude(sw/hits,sh/hits,0)
+	end
+end
+aux 'thecamellia'
+node{'thecamellia',thecamellia}
+
+local function thecamellia2(hits)
+	for i=1,4 do
+		mang_BA2[i]:diffusealpha(hits)
+	end
+end
+aux 'thecamellia2'
+node{'thecamellia2',thecamellia2}
+
 local function recursezoom(amt)
 	mang_aftsprite1:zoom(amt)
 end
@@ -176,16 +260,102 @@ end
 aux 'baa2zoom'
 node{'baa2zoom',baa2}
 
+local function baa3(amt)
+	mang_BA[3]:zoom(amt)
+end
+aux 'baa3zoom'
+node{'baa3zoom',baa3}
+
+local function baa3S(amt)
+	mang_BA[3]:skewx(amt)
+	for i=1,4 do
+		mang_BA2[i]:skewx(amt)
+	end
+end
+aux 'baa3skew'
+node{'baa3skew',baa3S}
+
+local function baa3y(amt)
+	mang_BA[3]:zoomy(amt)
+	for i=1,4 do
+		mang_BA2[i]:zoomy(amt)
+	end
+end
+aux 'baa3y'
+node{'baa3y',baa3y}
+
+local function vigamt(amt)
+	vignette[2]:diffuse(1,1,1,amt)
+end
+aux 'vigdiff'
+node{'vigdiff',vigamt}
+
+local function judgezoom(amt)
+	for i=1,2 do
+		PJ[i]:zoom(amt)
+	end
+end
+aux 'judgezoom'
+node{'judgezoom',judgezoom}
+
+local function vibratep(amt)
+	for i=1,2 do
+		PP[i]:vibrate(1)
+		PP[i]:effectmagnitude(amt,amt,0)
+	end
+end
+aux 'playervibrate'
+node{'playervibrate',vibratep}
+
+function feesh(feeshamt)
+	FishSprite:GetShader():uniform1f('amount',feeshamt)
+end
+aux 'fisheye'
+node{'fisheye',feesh}
+
+function gradpos1(amt)
+	gradient:y(amt)
+end
+aux 'grad1posy'
+node{'grad1posy',gradpos1}
+
+function gradpos2(amt)
+	gradient_full:y(amt)
+end
+aux 'grad2posy'
+node{'grad2posy',gradpos2}
+
+function stary(amt)
+	star[1]:y(amt)
+end
+aux 'stary'
+node{'stary',stary}
+
+function starx(amt)
+	star[1]:x(amt)
+end
+aux 'starx'
+node{'starx',starx}
+
+--[[local function p2vibrate(amt)
+	for i=1,2 do
+		PJ[i]:zoom(amt)
+	end
+end
+aux 'judgezoom'
+node{'judgezoom',judgezoom}]]--
+
 end)"
 Type = "ActorFrame"
 ><children>
-	
 	<Layer Type = "Quad" Name = "mang_initial[1]" />
+	<Layer Type = "Quad" Name = "mang_initial[2]" />
+	<Layer Type = "Quad" Name = "gradient_full" />
+	<Layer File = "mang/elements/gradient.png" Name = "gradient" />
 	
 	<Layer Type = "Sprite" InitCommand = "%xero.sprite" Name = "mang_aftsprite1" />
-
+	
 	<Layer File = "spellcards.xml" />
-
 
 	<Layer File = "mang/default.xml" />
 	<Layer File = "yasmyn64/default.xml" />
@@ -205,10 +375,25 @@ Type = "ActorFrame"
 
 	<Layer Type = "Quad" Name = "solarize[1]" />
 
-	<Layer File = "vignette.png" Name = "vignette[1]" />
+	
 	<Layer File = "mang/elements/BA1.png" Name = "mang_BA[1]" />
 	<Layer File = "mang/elements/BA2.png" Name = "mang_BA[2]" />
+	<Layer File = "mang/elements/BA3.png" Name = "mang_BA[3]" />
+
+	<Layer File = "mang/elements/BA21.png" Name = "mang_BA2[1]" />
+	<Layer File = "mang/elements/BA22.png" Name = "mang_BA2[2]" />
+	<Layer File = "mang/elements/BA23.png" Name = "mang_BA2[3]" />
+	<Layer File = "mang/elements/BA24.png" Name = "mang_BA2[4]" />
 
 	<Layer Type = "ActorFrameTexture" InitCommand = "%xero.aft" Name = "mang_aft1" />	
 
+	<Layer File = "vignette.png" Name = "vignette[1]" />
+	<Layer File = "vignette2.png" Name = "vignette[2]" />
+
+	<Layer File = "mang/elements/sparkles.png" Name = "star[1]" />
+	<Layer File = "mang/elements/star.png" Name = "star[2]" />
+
+	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="FishAft" />
+	<Layer Type="Sprite" Frag="shaders/fisheye.frag" InitCommand="%xero.sprite" Name="FishSprite"/>
+	
 </children></Mods>
