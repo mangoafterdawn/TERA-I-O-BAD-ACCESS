@@ -303,6 +303,7 @@ ease{227,4,outQuad,100,'dark0',
 
 for k,v in ipairs(recurse1) do
 	ease{v[1],1,inCirc,50,'flip',
+		0,'amt'
 	}
 	ease{v[1]+1,3,outExpo,100,'stealth',
 		100,'dark',
@@ -824,7 +825,8 @@ for i,v in ipairs(synth) do
 	local switch=(i+1)%2
 	add{v[1],1,pop,-40,'dark'..col}
 	add{v[1],3,pop,0.2,'alphastealth'..col}
-	add{v[1],3,outExpo,0.4,'offset'}
+	add{v[1],3,outExpo,0.4,'offset',}
+	add{v[1],1,outExpo,-1/95,'load'}
 	add{v[1],3,pop,-20,'amt'}
 end
 for i=0,3 do
@@ -1013,12 +1015,16 @@ set{260,0,'dark',
 	0,'reverse',
 	100,'zoom',
 	200,'zoomz',
-	100,'spiralholds',
+	--100,'spiralholds',
+	0.5,'fisheye'
 }
 ease{260,1,outExpo,-1200,'tiny',
 }
-ease{260,4,outExpo,0,'tiny'}
-ease{260,16,outExpo,1,'windiff'}
+ease{260,4,outExpo,0,'tiny',
+}
+ease{260,16,outExpo,1,'windiff',
+	sh,'winbgy'
+}
 
 func{196,function(beat)
 	P2:hidden(0)
@@ -1029,30 +1035,181 @@ ease{260,29,inQuad,360,'rotationx',
 	-rad(360),'confusionxoffset',
 	360,'winrotx'
 }
-
 func{260,function(beat)
 	windows:hidden(0)
 	windowsbg:hidden(0)
-	vignette[1]:hidden(1)
-	vignette[2]:hidden(1)
+	for i=1,2 do
+		vignette[i]:hidden(1)
+		load[i]:hidden(0)
+	end
+	vhsSprite:hidden(0)
+	crtSprite:hidden(0)
 end}
-
+for i=0,1 do
+	ease{271+i*0.5,1,pop,0,'dark'..i,
+		50,'stealth'..i
+	}
+end
+for i=0,1 do
+	ease{287+i*0.5,1,pop,0,'dark'..i+1,
+		50,'stealth'..i+1
+	}
+end
+for i=0,1 do
+	ease{303+i*0.5,1,pop,0,'dark'..i,
+		50,'stealth'..i
+	}
+end
 --set{260,100,'centered'}
+ease{324,5,inQuad,0.5,'alphastealth'}
 for col=0,3 do
 	ease{332,2,inCirc,
-		0,'flip',
-		0,'amt',
+		--0,'flip',
+		-300,'amt',
 		0,'dark'..col,
 		0,'dark',
 		1,'alphastealth'..col,
 		0,'drunk',
+		0,'bumpyx',
 		0,'tipsy',
-		1,'winskew',
 		0,'windiff',
-		0,'winy'
+	}
+	{332,2,inExpo,
+		3,'winskew',
+		0,'winy',
+		0,'winbgy',
+		0,'winbgskew'
+	}
+	{332,2,inSine,
+		0,'crt'	,
+		0,'fisheye',
+		1,'load'
+	}
+	{332,4,pop,-50,'tiny',
+		10,'skewy',
+		-10,'noteskewy'
+	}
+	add{332+col*0.5,1,pop,0.1,'load'}
+end
+
+func{334,function(beat)
+	for i=1,2 do
+		load[i]:hidden(1)
+	end
+	windowsbg:hidden(1)
+end}
+func{335,function(beat)
+	vhsSprite:hidden(1)
+	crtSprite:hidden(1)
+end}
+
+for i,v in ipairs(offsetdrums) do
+	add{332,16,linear,0.33,'offset'}
+	ease{332,13,inExpo,0,'confusionxoffset',
+		0,'rotationx'
+	}
+	if v[2]==0 then
+		if i<14 then
+			add{v[1],1,pop,-100,'beat'}
+		else
+		end
+	end
+	if v[2]==1 then
+		add{v[1],1,pop,-100,'tiny',
+			0.2,'offset'
+		}
+	end
+end
+ease{340,5,inCirc,0,'amt',
+	-25,'flip',
+}
+for i=0,15+8 do
+	local inv=2*(i%2)-1
+	set{323,100,'bumpyxperiod'}
+	ease{324+i*0.25,0.25,outExpo,((0+i^1.1)*inv),'bumpyx'}
+end
+
+for i=0,41-4 do
+	local pn=i%8/4+1
+	ease{340.5+i/8,0.25,pop,(i*2*(1/50))*40+20,'stealth'..i%4}
+end
+-- dropppppp
+set{346,0,'rotationy'}
+for i=0,16 do
+	local inv=2*(i%2)-1
+	local switch=(i+1)%2
+	plr=1
+	set{348-1,
+		100,'dark1',
+		100,'dark3',
+		100,'hidenoteflashes1',
+		100,'hidenoteflashes3',
+		100,'stealth1',
+		100,'stealth3',
+		--25,'flip'
+	}
+	ease{348+i-1,1,inExpo,
+		10*inv,'noteskewy',
+		-10*inv,'skewy',
+		40*inv,'cubicx',
+		20*inv,'rotationy',
+		-20*inv,'rotationx',
+		150*switch,'invert',
+	}
+	plr=2
+	ease{348+i-1,1,inExpo,
+		-10*inv,'noteskewy',
+		10*inv,'skewy',
+		-40*inv,'cubicx',
+		-20*inv,'rotationy',
+		20*inv,'rotationx',
+		150*switch,'invert',
+	}
+	set{348-1,
+		100,'dark0',
+		100,'dark2',
+		100,'hidenoteflashes0',
+		100,'hidenoteflashes2',
+		100,'stealth0',
+		100,'stealth2',
+	}
+	plr=nil
+	ease{348+i-1,1,bounce,
+		-100,'tiny',
+		-1000,'tinyz',
+		40,'movey',
+		-50,'amt'
 	}
 end
 
+
+
+ease{379.5,0.5,outExpo,1,'zigzag',
+	300,'longholds',
+	30000,'gayholds'
+}
+ease{379.5,0.5,inExpo,0,'zigzag',0,'longholds',0,'gayholds'}
+
+ease{364-1,1,inExpo,
+	0,'noteskewy',
+	0,'skewy',
+	0,'rotationy',
+	0,'rotationx',
+	0,'cubicx',
+	0,'invert',
+	0,'flip',
+}
+for col=0,3 do
+set{364,
+	0,'dark'..col,
+	0,'stealth'..col,
+	0,'hidenoteflashes'..col,
+}
+end
+ease{436-2,2,inCirc,
+	50,'flip',
+	-150,'amt'
+}
 
 end)"
 Type = "ActorFrame"

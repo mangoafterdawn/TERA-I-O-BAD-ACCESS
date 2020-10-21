@@ -24,6 +24,16 @@
 	-- your code goes here here:
 	--im putting all initial bg stuff here :]
 
+for i=1,2,1 do
+	load[i]:hidden(1)
+	load[i]:xy(scx,scy*1.75)
+end
+	load[1]:zoomto(sw-scx*0.333,sw*0.02)
+	load[2]:zoomto(sw-scx*0.35,sw*0.015)
+	load[1]:diffuse(0,0,0,1)
+	load[2]:diffuse(1,1,1,1)
+	
+
 windows:hidden(1)
 windows:xy(scx,scy)
 windows:zoomto(sw*0.2,sw*0.2)
@@ -31,7 +41,7 @@ windows:zoomto(sw*0.2,sw*0.2)
 windowsbg:hidden(1)
 windowsbg:xy(scx,scy)
 windowsbg:zoomto(sw,sh)
-windowsbg:diffuse(0,0.47,0.4,1)
+windowsbg:diffuse(0,0.4,0.4,1)
 
 vignette[1]:hidden(1)
 vignette[1]:blend('modulate')
@@ -126,8 +136,19 @@ end
 
 FishSprite:SetTexture(FishAft:GetTexture())
 FishSprite:hidden(1)
-FishSprite:SetTextureFiltering(false)
+--FishSprite:SetTextureFiltering(false)
 FishSprite:GetShader():uniform1f('amount',0)
+	
+vhsSprite:SetTexture(vhsAft:GetTexture())
+vhsSprite:hidden(1)
+
+glitch2Sprite:SetTexture(glitch2Aft:GetTexture())
+glitch2Sprite:hidden(1)
+glitch2Sprite:GetShader():uniform1f('amount',0.1)
+
+crtSprite:SetTexture(crtAft:GetTexture())
+crtSprite:hidden(1)
+
 
 	--im putting all initial mods stuff here :]
 func{0,function(beat)
@@ -146,8 +167,26 @@ set{0,2,'xmod',
 	1,'judgezoom',
 	3*scy,'grad1posy',
 	5*scy,'grad2posy',
+	1,'crt',
+	1,'load',
 	--scy*3,'stary',
 }
+
+--shader eases
+
+function feesh(feeshamt)
+	FishSprite:GetShader():uniform1f('amount',feeshamt)
+end
+aux 'fisheye'
+node{'fisheye',feesh}
+
+function crt(amt)
+	crtSprite:diffusealpha(amt)
+	vhsSprite:diffusealpha(amt)
+end
+aux 'crt'
+node{'crt',crt}
+
 --local functions
 --col specific alphastealth
 aux{'alphastealth0','alphastealth1','alphastealth2','alphastealth3'}
@@ -214,6 +253,7 @@ aux 'alphastealth3'
 node{'alphastealth3',alphastealth3}]]--
 
 --the rest
+
 local function thecamellia(hits)
 	for i=1,4 do
 		mang_BA2[i]:effectmagnitude(sw/hits,sh/hits,0)
@@ -320,12 +360,6 @@ end
 aux 'playervibrate'
 node{'playervibrate',vibratep}
 
-function feesh(feeshamt)
-	FishSprite:GetShader():uniform1f('amount',feeshamt)
-end
-aux 'fisheye'
-node{'fisheye',feesh}
-
 function gradpos1(amt)
 	gradient:y(amt)
 end
@@ -363,6 +397,24 @@ end
 aux 'winy'
 node{'winy',winy}
 
+function winbgskew(amt)
+	windowsbg:skewx(amt)
+end
+aux 'winbgskew'
+node{'winbgskew',winbgskew}
+
+function winbgy(amt)
+	windowsbg:zoomy(amt)
+end
+aux 'winbgy'
+node{'winbgy',winbgy}
+
+function loadprogress(amt)
+	load[2]:cropright(amt)
+end
+aux 'load'
+node{'load',loadprogress}
+
 --[[function stary(amt)
 	star[1]:y(amt)
 end
@@ -399,15 +451,18 @@ Type = "ActorFrame"
 	<Layer File = "yasmyn64/default.xml" />
 
 	<Layer File = "notedata/recurse1.xml" />
+	<Layer File = "notedata/offsetdrums.xml" />
 	<Layer File = "notedata/synth.xml" />
 	<Layer File = "yasmyn64/notedate.xml" />
 
+	<Layer Type = "Quad" Name = "windowsbg" />
+	<Layer Type = "Quad" Name = "load[1]" />
+	<Layer Type = "Quad" Name = "load[2]" />
+	<Layer File = "mang/elements/widnows.png" Name = "windows" />
 	<Layer Type = "ActorProxy" Name = "PC[1]" />
 	<Layer Type = "ActorProxy" Name = "PC[2]" />
 	<Layer Type = "ActorProxy" Name = "PJ[1]" />
 	<Layer Type = "ActorProxy" Name = "PJ[2]" />
-	<Layer Type = "Quad" Name = "windowsbg" />
-	<Layer File = "mang/elements/widnows.png" Name = "windows" />
 
 	<Layer Type = "Quad" Name = "solarize[2]" />
 
@@ -436,5 +491,11 @@ Type = "ActorFrame"
 
 	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="FishAft" />
 	<Layer Type="Sprite" Frag="shaders/fisheye.frag" InitCommand="%xero.sprite" Name="FishSprite"/>
+	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="vhsAft" />
+	<Layer Type="Sprite" Frag="shaders/vhs.frag" InitCommand="%xero.sprite" Name="vhsSprite"/>
+	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="glitch2Aft" />
+	<Layer Type="Sprite" Frag="shaders/glitch2.frag" InitCommand="%xero.sprite" Name="glitch2Sprite"/>
+	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="crtAft" />
+	<Layer Type="Sprite" Frag="shaders/crt.frag" InitCommand="%xero.sprite" Name="crtSprite"/>
 	
 </children></Mods>
