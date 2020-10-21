@@ -24,6 +24,15 @@
 	-- your code goes here here:
 	--im putting all initial bg stuff here :]
 
+windows:hidden(1)
+windows:xy(scx,scy)
+windows:zoomto(sw*0.2,sw*0.2)
+
+windowsbg:hidden(1)
+windowsbg:xy(scx,scy)
+windowsbg:zoomto(sw,sh)
+windowsbg:diffuse(0,0.47,0.4,1)
+
 vignette[1]:hidden(1)
 vignette[1]:blend('modulate')
 vignette[1]:xy(scx,scy)
@@ -36,24 +45,28 @@ vignette[2]:xy(scx,scy)
 vignette[2]:zoomto(sw,sw)
 
 gradient_full:hidden(0)
+gradient_full:blend('add')
 gradient_full:diffuse(1,0.8,0.9,1)
 gradient_full:xy(scx,scy)
 gradient_full:zoomto(sw,sh)
 
 gradient:hidden(0)
+gradient:blend('add')
 gradient:diffuse(1,0.8,0.9,1)
 gradient:xy(scx,scy)
 gradient:zoomto(sw,sh)
 
-star[1]:hidden(0)
-star[1]:xy((math.random()*100)*scx*0.02,scy*3)
-star[1]:diffusealpha(0.2)
-star[1]:blend('add')
-star[1]:zoomto(sw*0.25,sw*0.25)
+star[1]:hidden(1)
+--star[1]:xy((math.random()*100)*scx*0.02,scy*3)
+--star[1]:diffusealpha(0.2)
+--star[1]:blend('add')
+--star[1]:zoomto(sw*0.25,sw*0.25)
 
-star[2]:hidden(1)
+star[2]:hidden(0)
+star[2]:diffusealpha(0.5)
+star[2]:customtexturerect(0,0,7,7)
 star[2]:xy(scx,scy)
-star[2]:zoomto(sw*0.05,sw*0.05)
+star[2]:zoomto(sw,sw)
 
 mang_initial[1]:xy(scx,scy)
 mang_initial[1]:diffuse(0,0,0,1)
@@ -133,7 +146,7 @@ set{0,2,'xmod',
 	1,'judgezoom',
 	3*scy,'grad1posy',
 	5*scy,'grad2posy',
-	scy*3,'stary',
+	--scy*3,'stary',
 }
 --local functions
 --col specific alphastealth
@@ -321,11 +334,36 @@ node{'grad1posy',gradpos1}
 
 function gradpos2(amt)
 	gradient_full:y(amt)
+	star[2]:y(amt)
 end
 aux 'grad2posy'
 node{'grad2posy',gradpos2}
 
-function stary(amt)
+function winrotx(amt)
+	windows:rotationx(amt)
+end
+aux 'winrotx'
+node{'winrotx',winrotx}
+
+function windiff(amt)
+	windows:diffusealpha(amt)
+end
+aux 'windiff'
+node{'windiff',windiff}
+
+function winskew(amt)
+	windows:skewx(amt)
+end
+aux 'winskew'
+node{'winskew',winskew}
+
+function winy(amt)
+	windows:zoomy(amt)
+end
+aux 'winy'
+node{'winy',winy}
+
+--[[function stary(amt)
 	star[1]:y(amt)
 end
 aux 'stary'
@@ -335,7 +373,7 @@ function starx(amt)
 	star[1]:x(amt)
 end
 aux 'starx'
-node{'starx',starx}
+node{'starx',starx}]]--
 
 --[[local function p2vibrate(amt)
 	for i=1,2 do
@@ -362,11 +400,14 @@ Type = "ActorFrame"
 
 	<Layer File = "notedata/recurse1.xml" />
 	<Layer File = "notedata/synth.xml" />
+	<Layer File = "yasmyn64/notedate.xml" />
 
 	<Layer Type = "ActorProxy" Name = "PC[1]" />
 	<Layer Type = "ActorProxy" Name = "PC[2]" />
 	<Layer Type = "ActorProxy" Name = "PJ[1]" />
 	<Layer Type = "ActorProxy" Name = "PJ[2]" />
+	<Layer Type = "Quad" Name = "windowsbg" />
+	<Layer File = "mang/elements/widnows.png" Name = "windows" />
 
 	<Layer Type = "Quad" Name = "solarize[2]" />
 

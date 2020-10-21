@@ -23,7 +23,194 @@
 	end
 		-- your code goes here here:
 	--reminder to put your code here here where
+	local m,mm,me,mpf = mod_insert,mod_message,mod_ease,mod_perframe
 
+--DUU DUU DUU DUU DUU DUU DUU DUU DUU: INTRO---
+
+	for i,v in ipairs(notedate) do
+		local inv=2*(i%2)-1
+		ease{v[1],1,outExpo,300*inv,'drunk'}
+	end
+	ease{82.25,1,outExpo,0,'drunk'}
+	--ease{82.25,2,outCubic,200,'tandrunk'}
+	--ease{84,2,outCubic,0,'tandrunk'}
+
+
+ease{84,1,outCubic,300,'beat'}
+
+me(52,9,0,-100,'rotationx','len',inQuad)
+me(59.2,0.5,-100,0,'rotationx','len',outQuad)
+me(60,9,0,-100,'rotationx','len',inQuad)
+me(66.2,0.5,-100,0,'rotationx','len',outQuad)
+me(68,9,0,100,'rotationx','len',inQuad)
+me(75.2,0.5,100,0,'rotationx','len',outQuad)
+
+--me(52,1,-100,100,'movez','len',inCubic)
+
+me(66.50,0.5,0,100,'reverse0','len',outCubic)
+me(67.00,0.5,0,100,'reverse1','len',outCubic)
+me(67.25,0.5,0,100,'reverse2','len',outCubic)
+me(67.75,0.5,0,100,'reverse3','len',outCubic)
+
+
+me(76,0.5,100,0,'reverse0','len',outCubic)
+me(77.7,0.5,100,0,'reverse1','len',outCubic)
+me(79.2,0.5,100,0,'reverse2','len',outCubic)
+me(80.7,0.5,100,0,'reverse3','len',outCubic)
+
+--Go beet mod go fuuufuufuu--
+
+--set{86,100,'invert'}
+--set{87,0,'invert'}
+
+--set{90,100,'flip'}
+--set{91,0,'flip'}
+
+--set{94,100,'invert'}
+--set{95,0,'invert'}
+
+me(52,2,-600,0,'tiny','len',outExpo)
+me(60,2,-600,0,'tiny','len',outExpo)
+me(68,2,-600,0,'tiny','len',outExpo)
+me(76,2,-600,0,'tiny','len',outExpo)
+me(77.7,2,-600,0,'tiny','len',outExpo)
+me(79.2,2,-600,0,'tiny','len',outExpo)
+me(80.7,2,-600,0,'tiny','len',outExpo)
+me(82.2,2,-600,0,'tiny','len',outExpo)
+
+ease{98,1,outCubic,0,'beat'}
+ease{98,1,outQuad,0,'movey'}
+	
+--shake shake shake seniora--
+for i=116,128,2 do
+	me(i+0,0.5,50,-50,'movey','len',inQuad)
+	me(i+0.5,0.5,-50,50,'movey','len',outQuad)
+	me(i+1,0.5,50,-50,'movey','len',inQuad)
+	me(i+1.5,0.5,-50,50,'movey','len',outQuad)
+end
+
+ease{116,1,outCubic,250,'bouncez'}
+ease{129,1,outCubic,0,'bouncez'}
+
+me(116,9,0,-100,'rotationx','len',inQuad)
+me(123.25,0.5,-100,0,'rotationx','len',outQuad)
+me(124,8,0,-100,'rotationx','len',inQuad)
+me(130,0.5,-100,0,'rotationx','len',outQuad)
+--me(125,15,0,-200,'rotationx','len',inQuad)
+
+ease{116,1,outCubic,300,'beat'}
+ease{130,1,outCubic,0,'beat'}
+
+for i=116,128,2 do
+	me(i+0,1,-30,30,'rotationy','len',inOutCubic)
+	me(i+1,1,30,-30,'rotationy','len',inOutCubic)
+
+	me(i+0,1,math.rad(-30)*-100,math.rad(30)*-100,'confusionyoffset','len',inOutCubic)
+  	me(i+1,1,math.rad(30)*-100,math.rad(-30)*-100,'confusionyoffset','len',inOutCubic)
+end
+
+me(128,0.5,-180,0,'rotationy','len',inOutCubic)
+me(130,0.5,50,0,'movey','len',outQuad)
+
+ease{132,1,outCubic,300,'beat'}
+ease{146,1,outCubic,0,'beat'}
+
+for i=132,144,2 do
+	me(i+0,0.5,50,-50,'movey','len',inQuad)
+	me(i+0.5,0.5,-50,50,'movey','len',outQuad)
+	me(i+1,0.5,50,-50,'movey','len',inQuad)
+	me(i+1.5,0.5,-50,50,'movey','len',outQuad)
+end
+
+for i=132,144,2 do
+	me(i+0,1,-30,30,'rotationy','len',inOutCubic)
+	me(i+1,1,30,-30,'rotationy','len',inOutCubic)
+
+	me(i+0,1,math.rad(-30)*-100,math.rad(30)*-100,'confusionyoffset','len',inOutCubic)
+  	me(i+1,1,math.rad(30)*-100,math.rad(-30)*-100,'confusionyoffset','len',inOutCubic)
+end
+
+me(132,9,0,-100,'rotationx','len',inQuad)
+me(139.2,0.5,-100,0,'rotationx','len',outQuad)
+me(140,7.5,0,-100,'rotationx','len',inQuad)
+me(146,0.5,-100,0,'rotationx','len',outQuad)
+
+me(146,0.5,-30,0,'rotationy','len',inOutCubic)
+me(146,0.5,-30,0,'confusionyoffset','len',inOutCubic)
+me(146,0.5,50,0,'movey','len',outQuad)
+
+me(146,6,200,0,'mini','len',outExpo)
+
+ease{132,1,outCubic,250,'bouncez'}
+ease{144,1,outCubic,0,'bouncez'}
+
+--wiggly drunk goes brrrrrrrrr--
+
+for i=148,154,8 do
+	me(i+2,2.5,-200,0,'tipsy','len',inOutCubic)
+	me(i+6,2.5,200,0,'tipsy','len',inOutCubic)
+end
+
+for i=148,154,8 do
+	me(i+0,5.5,0,300,'drunk','len',inOutCubic)
+	me(i+1,5.5,300,0,'drunk','len',inOutCubic)
+	me(i+4,5.5,0,-300,'drunk','len',inOutCubic)
+	me(i+5,5.5,-300,0,'drunk','len',inOutCubic)
+end
+
+for i=148,154,8 do
+	me(i+0,3.5,0,400,'cubicx','len',inOutCubic)
+	me(i+1,3.5,400,0,'cubicx','len',inOutCubic)
+	me(i+4,3.5,0,-400,'cubicx','len',inOutCubic)
+	me(i+5,3.5,-400,0,'cubicx','len',inOutCubic)
+end
+
+for i=148,154,8 do
+	me(i+0,3.5,0,-250,'movex','len',inOutCubic)
+	me(i+1,4.5,-250,0,'movex','len',inOutCubic)
+	me(i+4,3.5,0,250,'movex','len',inOutCubic)
+	me(i+5,4.5,250,0,'movex','len',inOutCubic)
+end
+
+for i=156,157,4 do
+	me(i+2,2.5,-200,0,'tipsy','len',inOutCubic)
+end
+
+for i=156,157,4 do
+	me(i+2,3.5,-300,0,'drunk','len',inOutCubic)
+end
+
+for i=156,157,4 do
+	me(i+0,3.5,0,-250,'movex','len',inOutCubic)
+	me(i+1,4.5,-250,0,'movex','len',inOutCubic)
+end
+
+for i=156,157,4 do
+	me(i+0,3.5,0,400,'cubicx','len',inOutCubic)
+	me(i+1,4.5,400,0,'cubicx','len',inOutCubic)
+end
+
+
+me(160,2.5,0,0,'tipsy','len',inOutCubic)
+me(150,2,-600,0,'tiny','len',outExpo)
+me(154,2,-600,0,'tiny','len',outExpo)
+me(158,2,-600,0,'tiny','len',outExpo)
+
+--me(156,20,100,400,'zoomx','len',outCubic)
+--me(160,2,400,100,'zoomx','len',outCubic)
+
+
+--now in reverse--
+me(210,0.5,0,100,'reverse0','len',outCubic)
+me(210.5,0.5,0,100,'reverse1','len',outCubic)
+me(211,0.5,0,100,'reverse2','len',outCubic)
+me(211.5,0.5,0,100,'reverse3','len',outCubic)
+
+--Back to normal--
+me(226.5,0.5,100,0,'reverse0','len',outCubic)
+me(226.5,0.5,100,0,'reverse2','len',outCubic)
+me(227,0.5,100,0,'reverse1','len',outCubic)
+me(227,0.5,100,0,'reverse3','len',outCubic)
 
     --reminder to not put your code down there there because it will shatter :)
 end)"

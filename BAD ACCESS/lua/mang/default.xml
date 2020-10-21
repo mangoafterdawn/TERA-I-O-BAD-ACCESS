@@ -52,6 +52,9 @@ inSine outSine inOutSine]]--
 	-- your code goes here here:
 	--reminder to put your code here here where
 local pi,pie=math.pi,math.pi*100
+function rad(deg)
+	return math.rad(deg) * 100
+end
 --local inv=2*(i%2)-1
 --local switch=i%2
 set{0,50,'flip',
@@ -64,6 +67,7 @@ set{0,50,'flip',
 	100,'arrowpathdrawsizeback',
 	100,'arrowpathdrawsize',
 	0.12,'vigdiff',
+	0.3,'winy'
 }
 for i=0,1 do
 	add{12+4*i,2,pop,-30,'dark',
@@ -365,10 +369,6 @@ for k,v in ipairs(recurse1) do
 				--40*inv,'bumpyx',
 				50*inv,'zigzag',
 			}
-			ease{v[1]+7+i*0.125+j*8,0.125,outExpo,
-				--10*inv,'spiralx',
-				-1500*inv,'tinyz',
-			plr=2}
 			ease{v[1]+7+i*0.125+j*8,0.125,outExpo,100*inv,'tiny',
 			plr=1}
 			ease{v[1]+9+j*8,4,outExpo,
@@ -677,6 +677,8 @@ ease{192,4,outExpo,100,'zoom',
 	0,'confusionxoffset',
 	0,'rotationx',
 	0,'skewy',
+	0,'cubicz',
+	0,'attenuate'
 }
 add{192,4,outExpo,pie*2,'confusionyoffset',
 	(-90/1.5)-360,'rotationy'}
@@ -795,24 +797,26 @@ plr=2}
 
 --relating to the calm synth bit
 set{260,70,'tipsyspeed'}
-	{272,0,'rotationy',
-		0,'confusionyoffset'
-	}
-ease{260,16,outExpo,360,'rotationy',
-	-2*pie,'confusionyoffset',
+	--{272,0,'rotationy',
+	--	0,'confusionyoffset'
+	--}
+ease{260,16,outExpo,
+	--360,'rotationy',
+	--2*pie,'confusionyoffset',
 	-25,'flip',
 	20,'tipsy',
 	20,'drunk'
 }
 
-ease{260,1,outExpo,100,'dark0',
+ease{260,1,outExpo,
+	100,'dark0',
 	100,'dark1',
 	100,'dark2',
 	100,'dark3',
-	0.025,'alphastealth1',
-	0.025,'alphastealth2',
-	0.025,'alphastealth3',
-	0.025,'alphastealth4',
+	0.033,'alphastealth1',
+	0.033,'alphastealth2',
+	0.033,'alphastealth3',
+	0.033,'alphastealth4',
 }
 
 for i,v in ipairs(synth) do
@@ -820,8 +824,8 @@ for i,v in ipairs(synth) do
 	local switch=(i+1)%2
 	add{v[1],1,pop,-40,'dark'..col}
 	add{v[1],3,pop,0.2,'alphastealth'..col}
-	add{v[1],3,outExpo,45,'rotationy',
-	-0.25*pie,'confusionyoffset'}
+	add{v[1],3,outExpo,0.4,'offset'}
+	add{v[1],3,pop,-20,'amt'}
 end
 for i=0,3 do
 	ease{260,8,outSine,99,'dark'..i}
@@ -829,17 +833,225 @@ end
 
 --tah
 ease{194,2,inExpo,0,'recursediff'}
-add{203,0.75,outExpo,scx*-2,'grad1posy',
-	scx*-2,'grad2posy',
-	0,'vigdiff',
-	scy*-2,'stary',
-	(math.random()*100)*scx,'starx'
+for i=0,1 do
+	local inv=2*(i%2)-1
+	add{203+i*16,0.75,outExpo,scx*-2,'grad1posy',
+		scx*-2,'grad2posy',
+		0,'vigdiff',
+		--scy*-2,'stary',
+		--(math.random()*10)*scx,'starx'
+	}
+	add{203+i*16,1,inExpo,scx*2,'grad1posy',
+		scx*2,'grad2posy',
+		0.05,'vigdiff',
+		--scy*2,'stary',
+	}
+	set{202,
+		0,'zoom',
+		50,'reverse',
+		10000,'parabolaz',
+		100,'zoomz',
+		50,'flip',
+		100,'dark0',
+		100,'dark2',
+		100,'dark3',
+		100,'stealth',
+		scy,'y',
+	plr=2}
+	set{218,
+		100,'dark0',
+		100,'dark1',
+		100,'dark2',
+		scy,'y',
+	plr=2}
+	for col=0,3 do
+		set{205,
+			0,'dark'..col
+		}
+		set{221,
+			0,'dark'..col
+		}
+	end
+	func{202,function(beat)
+		--PP[2]:hidden(0)
+		P2:SetHiddenRegions({{199,203},{205,208}})
+	end}
+	func{202+16,function(beat)
+		--PP[2]:hidden(0)
+		P2:SetHiddenRegions({{215,219},{221,223}})
+	end}
+	func{205+i*16,function(beat)
+		--PP[2]:hidden(1)
+	end}
+	ease{203+i*16,1,inCirc,
+		--scy*1,'y',
+	plr=2}
+	ease{203+i*16,1,outExpo,
+		200,'zoom',
+		--0,'dark',
+		0,'stealth',
+	plr=2}
+	ease{204+i*16,1,inExpo,
+		--100,'dark',
+		100,'stealth',
+		0,'zoom',
+	plr=2}
+	ease{203+i*16,1,outExpo,
+		scy*-0.75,'y',
+	plr=2}
+	ease{203+i*16,1,inExpo,
+		0,'y',
+	plr=2}
+	add{204+i*16,0.5,pop,
+		100,'zoom',
+	plr=2}
+	--[[for pn=1,2 do
+	local rr=math.random(-360,360) --rr stands for.random rotate :]
+		ease{203+i*16,1,outExpo,
+		rr*pn,'rotationy',
+		-rad(rr)*pn,'confusionyoffset',
+		plr=1}]]--
+		set{196,
+			0,'rotationx',
+			0,'rotationy',
+			0,'confusionxoffset',
+			0,'confusionyoffset',
+			0,'confusionoffset',
+			0,'y',
+		plr=1}
+		for col=0,3 do 
+			add{203+i*16,1,inQuad,
+				-90*inv,'rotationy',
+			plr=1}
+			ease{203+i*16,2,pop,
+				-600,'tinyz',
+			}
+			ease{204+i*16,1,outExpo,
+				0.2,'fisheye',
+				2,'playervibrate',
+			}
+			ease{204+i*16,1,inExpo,
+				0,'fisheye',
+				0,'playervibrate',
+			}
+			ease{204+i*16,1,outExpo,
+				50,'brake',
+			plr=1}
+			ease{205+i*16,4,outExpo,
+				0,'brake',
+			plr=1}
+			ease{204+i*16,4,popElastic[1][6],
+				--90,'rotationz',
+				30*inv,'noteskew',
+				-30*inv,'skewx',
+			}
+			ease{203+i*16,2,outExpo,
+				math.floor(math.random(pie*-16,pie*16),pie*2),'confusionoffset'..col,
+				--50,'flip',
+				--150,'invert',
+				--scy/4,'y',
+				20,'zoom',
+				300,'drawsize',
+				--100,'reverse',
+				70,'stealth',
+				-100,'flip',
+			plr=1}
+			ease{204+i*16,1,outExpo,
+				--0,'confusionyoffset',
+				0,'confusionoffset'..col,
+				--0,'flip',
+				--0,'invert',
+				0,'y',
+				100,'zoom',
+				--0,'reverse',
+				0,'stealth',
+				0,'flip',
+			plr=1}
+		end
+	end
+--end
+
+aux{'offset', 'amt'}
+set{0,
+	0,'offset',
+	0,'amt'
 }
-add{203,1,inExpo,scx*2,'grad1posy',
-	scx*2,'grad2posy',
-	0.05,'vigdiff',
-	scy*3,'stary',
+node{'offset','amt',function(offset,amt,plr)
+        local pi=math.pi/4
+        local movex0, movex1, movex2, movex3, movey0, movey1, movey2, movey3 = 0,0,0,0,0,0,0,0
+        if amt ~= 0 then
+            movex0, movex1, movex2, movex3 =
+                math.cos(pi*(offset+0+plr*4))*amt,
+                math.cos(pi*(offset+1+plr*4))*amt,
+                math.cos(pi*(offset+2+plr*4))*amt,
+                math.cos(pi*(offset+3+plr*4))*amt
+            movey0, movey1, movey2, movey3 =
+                math.sin(pi*(offset+0+plr*4))*amt,
+                math.sin(pi*(offset+1+plr*4))*amt,
+                math.sin(pi*(offset+2+plr*4))*amt,
+                math.sin(pi*(offset+3+plr*4))*amt
+        end
+        return movex0, movex1, movex2, movex3, movey0, movey1, movey2, movey3
+end,
+'movex0','movex1','movex2','movex3',
+'movez0','movez1','movez2','movez3'
 }
+set{260,0,'rotationx',
+	0,'confusionxoffset',
+}
+ease{260,4,outExpo,
+	-120,'amt',
+	--1,'offset',
+	50,'flip',
+	90,'rotationx',
+	90,'winrotx',
+	-rad(90),'confusionxoffset',
+}
+set{260,0,'dark',
+	0,'stealth',
+	0,'parabolaz',
+	0,'reverse',
+	100,'zoom',
+	200,'zoomz',
+	100,'spiralholds',
+}
+ease{260,1,outExpo,-1200,'tiny',
+}
+ease{260,4,outExpo,0,'tiny'}
+ease{260,16,outExpo,1,'windiff'}
+
+func{196,function(beat)
+	P2:hidden(0)
+	PP[2]:hidden(0)
+end}
+
+ease{260,29,inQuad,360,'rotationx',
+	-rad(360),'confusionxoffset',
+	360,'winrotx'
+}
+
+func{260,function(beat)
+	windows:hidden(0)
+	windowsbg:hidden(0)
+	vignette[1]:hidden(1)
+	vignette[2]:hidden(1)
+end}
+
+--set{260,100,'centered'}
+for col=0,3 do
+	ease{332,2,inCirc,
+		0,'flip',
+		0,'amt',
+		0,'dark'..col,
+		0,'dark',
+		1,'alphastealth'..col,
+		0,'drunk',
+		0,'tipsy',
+		1,'winskew',
+		0,'windiff',
+		0,'winy'
+	}
+end
 
 
 end)"
