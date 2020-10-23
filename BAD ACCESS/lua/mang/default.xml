@@ -1,6 +1,5 @@
 <Mods LoadCommand = "%xero(function(self)
 	self:SetVanishPoint(scx, scy)
-	self:fov(45)
 	P1:hidden(1)
 	P2:hidden(1)
 	
@@ -57,6 +56,13 @@ function rad(deg)
 end
 --local inv=2*(i%2)-1
 --local switch=i%2
+func{0,function(beat)
+	glitch2Sprite:hidden(0)
+	for i=1,2 do
+		pieces[i]:shadowlength(3)
+		micheal:shadowlength(2)
+	end
+end}
 set{0,50,'flip',
 	100,'dark',
 	1,'alphastealth0',
@@ -67,7 +73,8 @@ set{0,50,'flip',
 	100,'arrowpathdrawsizeback',
 	100,'arrowpathdrawsize',
 	0.12,'vigdiff',
-	0.3,'winy'
+	0.2,'winy',
+	sw,'winbgx',
 }
 for i=0,1 do
 	add{12+4*i,2,pop,-30,'dark',
@@ -77,17 +84,23 @@ for i=0,1 do
 	}
 end
 for i=0,9 do
-	add{12+4*i,2,pop,-0.06,'vigdiff',
+	add{12+4*i,3,pop,-0.06,'vigdiff',
 		30,'arrowpath',
+		200,'arrowpathgirth',
+		90,'arrowpathgrain',
 		50,'tanbumpy',
 		50,'zigzag',
+	}
+	add{12+4*i,4,pop,
+		0.1,'glitch2',
+		0.2,'noise'
 	}
 end
 
 ease{4,20,inExpo,0,'dark', --lol
 	0,'flip',
 m=e}
---CIRCULAR...CIRCULAR!!! (jank and should have used poptions but i stole it from CERiNG c:
+--CIRCULAR...CIRCULAR!!! (jank and should have used poptions but i stole it from CERiNG c: note i do make it less jank ty chegg
 func{0,20, function(beat)
     for pn = 1, 2 do
         for col = 0, 3 do
@@ -303,7 +316,7 @@ ease{227,4,outQuad,100,'dark0',
 
 for k,v in ipairs(recurse1) do
 	ease{v[1],1,inCirc,50,'flip',
-		0,'amt'
+		--0,'amt'
 	}
 	ease{v[1]+1,3,outExpo,100,'stealth',
 		100,'dark',
@@ -382,7 +395,6 @@ for k,v in ipairs(recurse1) do
 				0,'skewy',
 				0,'noteskewy',
 				0,'rotationx',
-				0,'orient'
 			}
 			ease{v[1]+9+i*0.125+j*8,0.125,outExpo,0*inv,'spiralx',plr=2}
 		end
@@ -397,9 +409,9 @@ for k,v in ipairs(recurse1) do
 			local inv=2*(i%2)-1
 			local switch=(i+1)%2
 			ease{v[1]+7+i*0.25+j*8,0.25,outExpo,5*inv,'skewy',
+				0.1*switch,'glitch2',
 				-5*inv,'noteskewy',
 				5*inv,'rotationx',
-				20,'orient',
 				100*switch,'invert'
 			}
 		end
@@ -423,7 +435,7 @@ end
 ease{112.5,4,outExpo,0.999,'recursediff',
 	0,'recursevx',
 	0,'recursevy',
-	1.025,'recursezoom',
+	1.04,'recursezoom',
 }
 ease{112.5,0.5,outBack,1.5,'baa1zoom'}
 ease{113,0.5,outElastic,1.5,'baa2zoom'}
@@ -470,9 +482,10 @@ for i=0,15-4 do
 		20*inv,'zigzag',
 	}
 	add{164+i,2,pop,pie*0.25*inv,'confusionoffset',
-		-0.4,'fisheye'
+		-0.2,'fisheye',
 	}
-	ease{164,13,inExpo,-0.2,'fisheye'}
+	ease{164,13,inExpo,-0.2,'fisheye',
+	}
 for i=0,15 do
 	local inv=2*(i%2)-1
 	ease{171+i*(1/16),1/16,outExpo,31*inv,'confusionoffset',
@@ -566,16 +579,16 @@ end
 
 set{180,0,'skewx',
 	100,'zoomy',
-	0,'baa3y',
+	1,'baa3y',
 	0,'baa3skew',
+	0,'thecamellia2'
 }
-func{180.01,function(beat)
+func{180,function(beat)
 	for i=1,4 do
-		mang_BA2[i]:blend('weightedmultiply')
 		--mang_BA2[i]:blend('add')
-		mang_BA2[i]:skewx(0)
+		mang_BA2[i]:blend('weightedmultiply')
 		mang_BA2[i]:hidden(0)
-		mang_BA2[i]:zoomy(1)
+		mang_BA[3]:hidden(1)
 		PP[2]:hidden(1)
 	end
 end}
@@ -599,7 +612,7 @@ func{180,function(beat)
 	PJ[1]:xy(scx*0.5,scy)
 	PJ[2]:xy(scx*1.5,scy)
 end}
-add{180,4,outExpo,-0.02,'recursezoom',
+add{180,4,outExpo,-0.05,'recursezoom',
 }
 add{180,1,outExpo,-100,'invert'}
 
@@ -651,6 +664,7 @@ for i,v in ipairs(kick) do
 		10,'attenuate'
 	}
 	add{v[1],2,pop,-0.2,'fisheye',
+		0.01,'glitch2'
 		--100,'tinyz'
 	}
 end
@@ -679,7 +693,9 @@ ease{192,4,outExpo,100,'zoom',
 	0,'rotationx',
 	0,'skewy',
 	0,'cubicz',
-	0,'attenuate'
+	0,'attenuate',
+	0,'thecamellia2',
+	0,'glitch2'
 }
 add{192,4,outExpo,pie*2,'confusionyoffset',
 	(-90/1.5)-360,'rotationy'}
@@ -823,10 +839,13 @@ ease{260,1,outExpo,
 for i,v in ipairs(synth) do
 	local col=i%4
 	local switch=(i+1)%2
-	add{v[1],1,pop,-40,'dark'..col}
+	local inv=2*(i%2)-1
+	add{v[1],1,pop,-40,'dark'..col,
+		10*inv,'bumpyx',
+	}
 	add{v[1],3,pop,0.2,'alphastealth'..col}
 	add{v[1],3,outExpo,0.4,'offset',}
-	add{v[1],1,outExpo,-1/95,'load'}
+	add{v[1],1,outExpo,-1/100,'load'}
 	add{v[1],3,pop,-20,'amt'}
 end
 for i=0,3 do
@@ -921,6 +940,9 @@ for i=0,1 do
 			0,'confusionoffset',
 			0,'y',
 		plr=1}
+		set{196,
+			0,'orient',
+		}
 		for col=0,3 do 
 			add{203+i*16,1,inQuad,
 				-90*inv,'rotationy',
@@ -931,10 +953,12 @@ for i=0,1 do
 			ease{204+i*16,1,outExpo,
 				0.2,'fisheye',
 				2,'playervibrate',
+				0.01,'glitch2'
 			}
 			ease{204+i*16,1,inExpo,
 				0,'fisheye',
 				0,'playervibrate',
+				0,'glitch2'
 			}
 			ease{204+i*16,1,outExpo,
 				50,'brake',
@@ -980,23 +1004,26 @@ set{0,
 }
 node{'offset','amt',function(offset,amt,plr)
         local pi=math.pi/4
-        local movex0, movex1, movex2, movex3, movey0, movey1, movey2, movey3 = 0,0,0,0,0,0,0,0
-        if amt ~= 0 then
-            movex0, movex1, movex2, movex3 =
-                math.cos(pi*(offset+0+plr*4))*amt,
-                math.cos(pi*(offset+1+plr*4))*amt,
-                math.cos(pi*(offset+2+plr*4))*amt,
-                math.cos(pi*(offset+3+plr*4))*amt
-            movey0, movey1, movey2, movey3 =
-                math.sin(pi*(offset+0+plr*4))*amt,
-                math.sin(pi*(offset+1+plr*4))*amt,
-                math.sin(pi*(offset+2+plr*4))*amt,
-                math.sin(pi*(offset+3+plr*4))*amt
-        end
-        return movex0, movex1, movex2, movex3, movey0, movey1, movey2, movey3
+        local movex0, movex1, movex2, movex3, piecesx1, piecesx2 =
+            math.cos(pi*(offset+0+plr*4))*amt,
+            math.cos(pi*(offset+1+plr*4))*amt,
+            math.cos(pi*(offset+2+plr*4))*amt,
+            math.cos(pi*(offset+3+plr*4))*amt,
+
+            math.cos(pi*(offset+0))*(amt*0.52)+scx,
+            math.cos(pi*(offset+4))*(amt*0.52)+scx
+        local movez0, movez1, movez2, movez3, piecesz1, piecesz2 =
+            math.sin(pi*(offset+0+plr*4))*amt,
+            math.sin(pi*(offset+1+plr*4))*amt,
+            math.sin(pi*(offset+2+plr*4))*amt,
+            math.sin(pi*(offset+3+plr*4))*amt,
+
+            math.sin(pi*(offset+0))*(amt*0.64),
+            math.sin(pi*(offset+4))*(amt*0.64)
+        return movex0, movex1, movex2, movex3, piecesx1, piecesx2, movez0, movez1, movez2, movez3, piecesz1, piecesz2
 end,
-'movex0','movex1','movex2','movex3',
-'movez0','movez1','movez2','movez3'
+'movex0','movex1','movex2','movex3','piecesx1','piecesx2',
+'movez0','movez1','movez2','movez3','piecesz1','piecesz2'
 }
 set{260,0,'rotationx',
 	0,'confusionxoffset',
@@ -1009,6 +1036,7 @@ ease{260,4,outExpo,
 	90,'winrotx',
 	-rad(90),'confusionxoffset',
 }
+
 set{260,0,'dark',
 	0,'stealth',
 	0,'parabolaz',
@@ -1016,7 +1044,7 @@ set{260,0,'dark',
 	100,'zoom',
 	200,'zoomz',
 	--100,'spiralholds',
-	0.5,'fisheye'
+	--0.5,'fisheye'
 }
 ease{260,1,outExpo,-1200,'tiny',
 }
@@ -1073,12 +1101,13 @@ for col=0,3 do
 		0,'bumpyx',
 		0,'tipsy',
 		0,'windiff',
+		99,'fov',
 	}
 	{332,2,inExpo,
 		3,'winskew',
 		0,'winy',
 		0,'winbgy',
-		0,'winbgskew'
+		1,'winbgskew'
 	}
 	{332,2,inSine,
 		0,'crt'	,
@@ -1091,8 +1120,8 @@ for col=0,3 do
 	}
 	add{332+col*0.5,1,pop,0.1,'load'}
 end
-
-func{334,function(beat)
+ease{334-2,2,inExpo,3*scx,'loadx'}
+func{335,function(beat)
 	for i=1,2 do
 		load[i]:hidden(1)
 	end
@@ -1104,6 +1133,7 @@ func{335,function(beat)
 end}
 
 for i,v in ipairs(offsetdrums) do
+	local inv=2*(i%2)-1
 	add{332,16,linear,0.33,'offset'}
 	ease{332,13,inExpo,0,'confusionxoffset',
 		0,'rotationx'
@@ -1116,7 +1146,8 @@ for i,v in ipairs(offsetdrums) do
 	end
 	if v[2]==1 then
 		add{v[1],1,pop,-100,'tiny',
-			0.2,'offset'
+			0.2,'offset',
+			50*inv,'bumpyx'
 		}
 	end
 end
@@ -1133,8 +1164,20 @@ for i=0,41-4 do
 	local pn=i%8/4+1
 	ease{340.5+i/8,0.25,pop,(i*2*(1/50))*40+20,'stealth'..i%4}
 end
+
+ease{345,4,popElastic[1][5],-50,'flip',
+	-200,'tinyx'
+}
+ease{345,4,outExpo,45,'fov'}
 -- dropppppp
 set{346,0,'rotationy'}
+
+for i=0,4 do
+	local inv=2*(i%2)-1
+	local switch=(i+1)%2
+	ease{346+i/4,0.5,outExpo,150*switch,'invert'}
+end
+
 for i=0,16 do
 	local inv=2*(i%2)-1
 	local switch=(i+1)%2
@@ -1180,9 +1223,61 @@ for i=0,16 do
 		40,'movey',
 		-50,'amt'
 	}
+	add{348+i,1,pop,-10*inv,'rotationz'}
 end
 
+--buiiiild up
 
+add{364,3,outExpo,100,'x'}
+add{370,3,outExpo,-200,'x'}
+add{379.5,1,outExpo,200,'x'}
+add{386,1,outExpo,-100,'x'}
+
+for j=0,3 do
+ease{(364-1)+j*8,1,inExpo,100,'amt',
+	50,'flip',
+}
+	for i=0,2 do
+			add{364+i*1.5+j*8,8,outExpo,1,'offset',
+			20*(j+1),'amt',
+			3*(j+1),'rotationx',
+			-rad(3)*(j+1),'confusionxoffset'
+			}
+		if j<3 then
+			add{368.5+i*0.5+j*8,1,outExpo,
+				-50/3,'flip',
+				(-100+(-20*(j+1)*3))/3,'amt',
+				-1/6,'offset',
+			}
+		ease{370+j*8,1,outBack,0,'flip'}
+		end
+	end
+end
+add{391,5,inExpo,
+	-20,'offset',
+}
+ease{391,5,inExpo,
+	0,'flip',
+	-600,'tiny'
+}
+ease{391,5,inCirc,
+	0,'amt',
+}
+ease{391,5,outQuad,
+	50,'stealth0',
+	50,'stealth3',
+	100,'dark1',
+	100,'dark2',
+}
+ease{396,1,outExpo,
+	0,'rotationx',
+	0,'confusionxoffset',
+	0,'stealth0',
+	0,'stealth3',
+	0,'dark1',
+	0,'dark2',
+	0,'tiny'
+}
 
 ease{379.5,0.5,outExpo,1,'zigzag',
 	300,'longholds',
@@ -1197,7 +1292,7 @@ ease{364-1,1,inExpo,
 	0,'rotationx',
 	0,'cubicx',
 	0,'invert',
-	0,'flip',
+	--0,'flip',
 }
 for col=0,3 do
 set{364,
@@ -1205,11 +1300,90 @@ set{364,
 	0,'stealth'..col,
 	0,'hidenoteflashes'..col,
 }
+--invert march
+
+for i=1,8 do
+	local i=i
+	func{396+i*0.75,function(beat)
+		if i<7 then
+			invmarch[2*i-1]:hidden(0)
+			invmarch[2*i]:hidden(0)
+		end
+	end}
 end
+
+
+--did you know that if you eat the pieces outBackExpo
+end
+for i=0,1 do
+	add{433+i*0.5,1,outExpo,
+		50,'hidden',
+		5,'hiddenoffset',
+		-10,'piecesx1',
+		-10,'piecesz1',
+		10,'piecesx2',
+		10,'piecesz2',
+	}
+	add{433+i*0.5,0.25,outBack,
+		1.5,'pieceszoom'..(i+1)
+	}
+end
+ease{433,476,inSine,74,'brake',
+	1,'tanbumpyy',
+	1,'tanbumpyx',
+m=e}
+
+func{433-1,function(beat)
+	pieces[1]:hidden(0)
+end}
+func{433.5-1,function(beat)
+	pieces[2]:hidden(0)
+end}
+func{436,function(beat)
+	vhsSprite:hidden(0)
+	crtSprite:hidden(0)
+	micheal:hidden(0)
+	windowsbg:hidden(0)
+	windowsbg:diffuse(0,0.15,0.4,1)
+end}
+set{436,
+	1,'crt',
+	0,'winbgskew',
+}
+ease{436,1,outExpo,sh,'winbgy'}
+
 ease{436-2,2,inCirc,
 	50,'flip',
-	-150,'amt'
+	-150,'amt',
+	0,'piecesx1',
+	0,'piecesx2',
+	0,'piecesz1',
+	0,'piecesz2',
+	100,'spiralholds',
+	100,'gayholds',
+
 }
+ease{476-2,2,inExpo,0,'pieceszoomx',
+	0,'zoomx',
+	0,'hidden',
+	0,'brake',
+	0,'winbgx',
+	0,'michealsoft'
+}
+ease{476-2,2,inSine,
+	0,'crt',
+}
+func{476,function(beat)
+	vhsSprite:hidden(1)
+	crtSprite:hidden(1)
+	micheal:hidden(1)
+	windowsbg:hidden(1)
+	for i=1,2 do
+		pieces[i]:hidden(1)
+	end
+end}
+
+ease{479,1,outExpo,100,'zoomx'}
 
 end)"
 Type = "ActorFrame"

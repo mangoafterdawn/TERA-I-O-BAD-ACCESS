@@ -1,6 +1,13 @@
 <Mods LoadCommand = "%xero(function(self)
+	oldtime=GAMESTATE:GetSongTime()
+	smoothdt=0
+	acc=0
+	--mang_aft_visible=false
+	function RealFov(fov)
+          return 360 / math.pi * math.atan(math.tan(math.pi * fov / 360) * DISPLAY:GetDisplayWidth() / DISPLAY:GetDisplayHeight() * (9/16))
+    end
 	self:SetVanishPoint(scx, scy)
-	self:fov(45)
+	self:fov(RealFov(45))
 	P1:hidden(1)
 	P2:hidden(1)
 	
@@ -33,10 +40,41 @@ end
 	load[1]:diffuse(0,0,0,1)
 	load[2]:diffuse(1,1,1,1)
 	
+for i=1,2 do
+		pieces[i]:zoomto(0,200)
+		pieces[i]:SetTextureFiltering(false)
+		pieces[i]:zbuffer(1)
+		pieces[i]:hidden(1)
+	end
+	pieces[1]:y(scy*0.9)
+	pieces[2]:y(scy*0.9)
+
+--thank you xero
+zbufferclearerorwhateveryouregonnacallit:zoom(0)
+zbufferclearerorwhateveryouregonnacallit:clearzbuffer(1)
 
 windows:hidden(1)
 windows:xy(scx,scy)
 windows:zoomto(sw*0.2,sw*0.2)
+
+--windows 3.0
+--windows:rotationz(-20) 
+
+do
+  local Table = {}
+  for i = 1,10 do
+    table.insert(Table,'michealsoft.png')
+  end
+  table.insert(Table,'microsoft.png')
+  local a = Table[math.random(1,#Table)]
+  if a then
+    micheal:Load(GAMESTATE:GetCurrentSong():GetSongDir()..'lua/mang/elements/'..a)
+  end
+end
+
+micheal:hidden(1)
+micheal:xy(scx,scy)
+micheal:zoomto(sw*0.95,sh*0.95)
 
 windowsbg:hidden(1)
 windowsbg:xy(scx,scy)
@@ -65,6 +103,13 @@ gradient:blend('add')
 gradient:diffuse(1,0.8,0.9,1)
 gradient:xy(scx,scy)
 gradient:zoomto(sw,sh)
+
+noise:hidden(0)
+noise:blend('subtract')
+noise:vibrate(1)
+noise:effectmagnitude(sw/2,sh/2,0)
+noise:xy(scx,scy)
+noise:zoomto(sw*2,sh*2)
 
 star[1]:hidden(1)
 --star[1]:xy((math.random()*100)*scx*0.02,scy*3)
@@ -134,6 +179,22 @@ for i=1,4 do
 	mang_BA2[i]:effectmagnitude(sw/4,sh/4,0)
 end
 
+--invert march setup
+
+for i=1,12 do
+	invmarch[i]:hidden(1)
+	invmarch[i]:x(i*(sw/8)-sw/4)
+	invmarch[i]:y(scy)
+	invmarch[i]:skewx(3)
+	invmarch[i]:zoomto(sw/8,sh)
+	if i<7 then
+		invmarch[i*2-1]:diffuse(1,1,1,1)
+		invmarch[i*2-1]:blend('invertdest')
+		invmarch[i*2]:diffuse(0.5,0.5,0.5,1)
+		invmarch[i*2]:blend('weightedmultiply')
+	end
+end
+
 FishSprite:SetTexture(FishAft:GetTexture())
 FishSprite:hidden(1)
 --FishSprite:SetTextureFiltering(false)
@@ -144,11 +205,11 @@ vhsSprite:hidden(1)
 
 glitch2Sprite:SetTexture(glitch2Aft:GetTexture())
 glitch2Sprite:hidden(1)
+glitch2Sprite:SetTextureFiltering(false)
 glitch2Sprite:GetShader():uniform1f('amount',0.1)
 
 crtSprite:SetTexture(crtAft:GetTexture())
 crtSprite:hidden(1)
-
 
 	--im putting all initial mods stuff here :]
 func{0,function(beat)
@@ -169,6 +230,10 @@ set{0,2,'xmod',
 	5*scy,'grad2posy',
 	1,'crt',
 	1,'load',
+	45,'fov',
+	1.7,'pieceszoomx',
+	1,'michealsoft',
+	scx,'loadx'
 	--scy*3,'stary',
 }
 
@@ -179,6 +244,12 @@ function feesh(feeshamt)
 end
 aux 'fisheye'
 node{'fisheye',feesh}
+
+function glitch2(amt)
+	glitch2Sprite:GetShader():uniform1f('amount',amt)
+end
+aux 'glitch2'
+node{'glitch2',glitch2}
 
 function crt(amt)
 	crtSprite:diffusealpha(amt)
@@ -397,6 +468,12 @@ end
 aux 'winy'
 node{'winy',winy}
 
+function winbgx(amt)
+	windowsbg:zoomx(amt)
+end
+aux 'winbgx'
+node{'winbgx',winbgx,defer=true}
+
 function winbgskew(amt)
 	windowsbg:skewx(amt)
 end
@@ -409,11 +486,84 @@ end
 aux 'winbgy'
 node{'winbgy',winbgy}
 
+
 function loadprogress(amt)
 	load[2]:cropright(amt)
 end
 aux 'load'
 node{'load',loadprogress}
+
+function loadx(amt)
+	load[1]:x(amt)
+	load[2]:x(amt)
+end
+aux 'loadx'
+node{'loadx',loadx,defer=true}
+
+function fovslider(amt)
+	for i=1,2 do
+		self:fov(RealFov(amt))
+	end
+end
+aux 'fov'
+node{'fov',fovslider}
+
+--pieces 
+
+function piecesx1(amt)
+	pieces[1]:x(amt)
+end
+aux 'piecesx1'
+node{'piecesx1',piecesx1,defer=true}
+function piecesz1(amt)
+	pieces[1]:z(amt)
+end
+aux 'piecesz1'
+node{'piecesz1',piecesz1,defer=true}
+
+function piecesx2(amt)
+	pieces[2]:x(amt)
+end
+aux 'piecesx2'
+node{'piecesx2',piecesx2,defer=true}
+function piecesz2(amt)
+	pieces[2]:z(amt)
+end
+aux 'piecesz2'
+node{'piecesz2',piecesz2,defer=true}
+
+function pieceszoomx(amt)
+	for i=1,2 do
+		pieces[i]:zoomx(amt)
+	end
+end
+aux 'pieceszoomx'
+node{'pieceszoomx',pieceszoomx,defer=true}
+
+function pieceszoom1(amt)
+	pieces[1]:zoom(amt)
+end
+aux 'pieceszoom1'
+node{'pieceszoom1',pieceszoom1,defer=true}
+
+function pieceszoom2(amt)
+	pieces[2]:zoom(amt)
+end
+aux 'pieceszoom2'
+node{'pieceszoom2',pieceszoom2,defer=true}
+
+function noiseamt(amt)
+	noise:diffusealpha(amt)
+end
+aux 'noise'
+node{'noise',noiseamt,defer=true}
+
+--squish that micheal
+function michealsoft(amt)
+	micheal:zoomx(amt)
+end
+aux 'michealsoft'
+node{'michealsoft',michealsoft,defer=true}
 
 --[[function stary(amt)
 	star[1]:y(amt)
@@ -435,9 +585,11 @@ end
 aux 'judgezoom'
 node{'judgezoom',judgezoom}]]--
 
+
 end)"
 Type = "ActorFrame"
 ><children>
+	<p>Welcome to my website</p>
 	<Layer Type = "Quad" Name = "mang_initial[1]" />
 	<Layer Type = "Quad" Name = "mang_initial[2]" />
 	<Layer Type = "Quad" Name = "gradient_full" />
@@ -470,6 +622,7 @@ Type = "ActorFrame"
 	<Layer Type = "ActorProxy" Name = "PP[2]" />
 
 	<Layer Type = "Quad" Name = "solarize[1]" />
+	
 
 	
 	<Layer File = "mang/elements/BA1.png" Name = "mang_BA[1]" />
@@ -481,7 +634,38 @@ Type = "ActorFrame"
 	<Layer File = "mang/elements/BA23.png" Name = "mang_BA2[3]" />
 	<Layer File = "mang/elements/BA24.png" Name = "mang_BA2[4]" />
 
-	<Layer Type = "ActorFrameTexture" InitCommand = "%xero.aft" Name = "mang_aft1" />	
+	<Layer Type = "Quad" Name = "zbufferclearerorwhateveryouregonnacallit" />
+	<Layer File = "mang/elements/pieces.png" Name = "pieces[1]" />
+	<Layer File = "mang/elements/pieces.png" Name = "pieces[2]" />
+
+	<Layer Type = "Quad" Name = "invmarch[1]" />
+	<Layer Type = "Quad" Name = "invmarch[2]" />
+	<Layer Type = "Quad" Name = "invmarch[3]" />
+	<Layer Type = "Quad" Name = "invmarch[4]" />
+	<Layer Type = "Quad" Name = "invmarch[5]" />
+	<Layer Type = "Quad" Name = "invmarch[6]" />
+	<Layer Type = "Quad" Name = "invmarch[7]" />
+	<Layer Type = "Quad" Name = "invmarch[8]" />
+	<Layer Type = "Quad" Name = "invmarch[9]" />
+	<Layer Type = "Quad" Name = "invmarch[10]" />
+	<Layer Type = "Quad" Name = "invmarch[11]" />
+	<Layer Type = "Quad" Name = "invmarch[12]" />
+
+	<Layer Type = "ActorFrameTexture" InitCommand = "%xero.aft" Name = "mang_aft1" />
+	
+	<Layer LoadCommand="luaeffect,loop" loopCommand="%xero(function(self) 
+		local curtime=GAMESTATE:GetSongTime()
+		local dt=curtime-oldtime
+		oldtime=curtime
+		smoothdt=smoothdt*0.5+(dt*0.5)
+		acc=acc+smoothdt
+		if acc>0 then
+			mang_aft1:hidden(0)
+			acc=acc-(1/60)
+		else
+			mang_aft1:hidden(1)
+		end
+	end)" />
 
 	<Layer File = "vignette.png" Name = "vignette[1]" />
 	<Layer File = "vignette2.png" Name = "vignette[2]" />
@@ -491,11 +675,17 @@ Type = "ActorFrame"
 
 	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="FishAft" />
 	<Layer Type="Sprite" Frag="shaders/fisheye.frag" InitCommand="%xero.sprite" Name="FishSprite"/>
+
+	<Layer File = "mang/elements/michealsoft.png" Type = "Sprite" Name = "micheal" />
+
 	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="vhsAft" />
 	<Layer Type="Sprite" Frag="shaders/vhs.frag" InitCommand="%xero.sprite" Name="vhsSprite"/>
 	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="glitch2Aft" />
 	<Layer Type="Sprite" Frag="shaders/glitch2.frag" InitCommand="%xero.sprite" Name="glitch2Sprite"/>
 	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="crtAft" />
 	<Layer Type="Sprite" Frag="shaders/crt.frag" InitCommand="%xero.sprite" Name="crtSprite"/>
+
+	<Layer File = "mang/elements/noise.png" Name = "noise" />
+
 	
 </children></Mods>

@@ -1,6 +1,5 @@
 <Mods LoadCommand = "%xero(function(self)
 	self:SetVanishPoint(scx, scy)
-	self:fov(45)
 	P1:hidden(1)
 	P2:hidden(1)
 	
@@ -36,7 +35,7 @@
 	--ease{84,2,outCubic,0,'tandrunk'}
 
 
-ease{84,1,outCubic,300,'beat'}
+--ease{84,1,outCubic,300,'beat'}
 
 me(52,9,0,-100,'rotationx','len',inQuad)
 me(59.2,0.5,-100,0,'rotationx','len',outQuad)
@@ -78,8 +77,8 @@ me(79.2,2,-600,0,'tiny','len',outExpo)
 me(80.7,2,-600,0,'tiny','len',outExpo)
 me(82.2,2,-600,0,'tiny','len',outExpo)
 
-ease{98,1,outCubic,0,'beat'}
-ease{98,1,outQuad,0,'movey'}
+--ease{98,1,outCubic,0,'beat'}
+--ease{98,1,outQuad,0,'movey'}
 	
 --shake shake shake seniora--
 for i=116,128,2 do
@@ -145,6 +144,10 @@ ease{132,1,outCubic,250,'bouncez'}
 ease{144,1,outCubic,0,'bouncez'}
 
 --wiggly drunk goes brrrrrrrrr--
+
+--im breaking into your house now, -mang
+set{148,50,'orient'}
+--ok bye
 
 for i=148,154,8 do
 	me(i+2,2.5,-200,0,'tipsy','len',inOutCubic)
