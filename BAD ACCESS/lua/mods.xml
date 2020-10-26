@@ -72,6 +72,18 @@ do
   end
 end
 
+for i=1,3 do
+	crash[i]:xy(scx,scy)
+	crash[i]:SetTextureFiltering(false)
+	crash[i]:zoomto(sw*4,sh*4)
+	crash[i]:hidden(1)
+	crash[i]:vibrate(1)
+	crash[i]:effectmagnitude(sw*3,sh*3,400)
+end
+	crash[1]:blend('invertdest')
+	crash[2]:blend('invertdest')
+	crash[3]:blend('invertdest')
+
 micheal:hidden(1)
 micheal:xy(scx,scy)
 micheal:zoomto(sw*0.95,sh*0.95)
@@ -181,19 +193,88 @@ end
 
 --invert march setup
 
-for i=1,12 do
-	invmarch[i]:hidden(1)
-	invmarch[i]:x(i*(sw/8)-sw/4)
-	invmarch[i]:y(scy)
-	invmarch[i]:skewx(3)
-	invmarch[i]:zoomto(sw/8,sh)
-	if i<7 then
-		invmarch[i*2-1]:diffuse(1,1,1,1)
-		invmarch[i*2-1]:blend('invertdest')
-		invmarch[i*2]:diffuse(0.5,0.5,0.5,1)
-		invmarch[i*2]:blend('weightedmultiply')
-	end
+for i=1,2 do
+	stripe[i]:hidden(1)
+	stripe[i]:xy(scx,scy)
+	stripe[i]:zoomto(sw*2,sw*2)
+	stripe[1]:blend('weightedmultiply')
+	stripe[2]:blend('weightedmultiply')
 end
+	stripe[2]:diffuse(1,1,1,1)
+
+local function stripespeed(amt)
+	stripe[1]:texcoordvelocity(amt,amt)
+end
+aux 'stripespeed'
+node{'stripespeed',stripespeed,defer=true}
+
+local function stripeskew(amt)
+	stripe[1]:skewx(amt)
+end
+aux 'stripeskew'
+node{'stripeskew',stripeskew,defer=true}
+
+local function stripecrop(amt)
+	stripe[1]:cropright(amt)
+end
+aux 'stripecrop'
+node{'stripecrop',stripecrop,defer=true}
+
+local function striperot(amt)
+	stripe[1]:rotationz(amt)
+end
+aux 'striperot'
+node{'striperot',striperot,defer=true}
+
+local function striperotx(amt)
+	stripe[1]:rotationx(amt)
+end
+aux 'striperotx'
+node{'striperotx',striperotx,defer=true}
+
+local function stripeiterate(amt)
+	stripe[1]:customtexturerect(0,0,amt,amt)
+end
+aux 'stripeiterate'
+node{'stripeiterate',stripeiterate,defer=true}
+
+--2
+
+local function stripespeed2(amt)
+	stripe[2]:texcoordvelocity(amt,amt)
+end
+aux 'stripespeed2'
+node{'stripespeed2',stripespeed2,defer=true}
+
+local function stripeskew2(amt)
+	stripe[2]:skewx(amt)
+end
+aux 'stripeskew2'
+node{'stripeskew2',stripeskew2,defer=true}
+
+local function stripecrop2(amt)
+	stripe[2]:cropright(amt)
+end
+aux 'stripecrop2'
+node{'stripecrop2',stripecrop2,defer=true}
+
+local function striperot2(amt)
+	stripe[2]:rotationz(amt)
+end
+aux 'striperot2'
+node{'striperot2',striperot2,defer=true}
+
+local function striperotx2(amt)
+	stripe[2]:rotationx(amt)
+end
+aux 'striperotx2'
+node{'striperotx2',striperotx2,defer=true}
+
+local function stripeiterate2(amt)
+	stripe[2]:customtexturerect(0,0,amt,amt)
+end
+aux 'stripeiterate2'
+node{'stripeiterate2',stripeiterate2,defer=true}
 
 FishSprite:SetTexture(FishAft:GetTexture())
 FishSprite:hidden(1)
@@ -233,7 +314,10 @@ set{0,2,'xmod',
 	45,'fov',
 	1.7,'pieceszoomx',
 	1,'michealsoft',
-	scx,'loadx'
+	scx,'loadx',
+	10,'stripeiterate',
+	10,'stripeiterate2',
+	1,'stripecrop2',
 	--scy*3,'stary',
 }
 
@@ -607,6 +691,8 @@ Type = "ActorFrame"
 	<Layer File = "notedata/synth.xml" />
 	<Layer File = "yasmyn64/notedate.xml" />
 
+
+
 	<Layer Type = "Quad" Name = "windowsbg" />
 	<Layer Type = "Quad" Name = "load[1]" />
 	<Layer Type = "Quad" Name = "load[2]" />
@@ -620,10 +706,14 @@ Type = "ActorFrame"
 
 	<Layer Type = "ActorProxy" Name = "PP[1]" />
 	<Layer Type = "ActorProxy" Name = "PP[2]" />
+	<Layer File = "mang/elements/stripe.png" Name = "stripe[1]"/>
+	<Layer File = "mang/elements/stripe.png" Name = "stripe[2]"/>
+	<Layer File = "mang/elements/crash1.png" Name = "crash[1]" />
+	<Layer File = "mang/elements/crash2.png" Name = "crash[2]" />
+	<Layer File = "mang/elements/crash3.png" Name = "crash[3]" />
 
 	<Layer Type = "Quad" Name = "solarize[1]" />
 	
-
 	
 	<Layer File = "mang/elements/BA1.png" Name = "mang_BA[1]" />
 	<Layer File = "mang/elements/BA2.png" Name = "mang_BA[2]" />
@@ -635,21 +725,6 @@ Type = "ActorFrame"
 	<Layer File = "mang/elements/BA24.png" Name = "mang_BA2[4]" />
 
 	<Layer Type = "Quad" Name = "zbufferclearerorwhateveryouregonnacallit" />
-	<Layer File = "mang/elements/pieces.png" Name = "pieces[1]" />
-	<Layer File = "mang/elements/pieces.png" Name = "pieces[2]" />
-
-	<Layer Type = "Quad" Name = "invmarch[1]" />
-	<Layer Type = "Quad" Name = "invmarch[2]" />
-	<Layer Type = "Quad" Name = "invmarch[3]" />
-	<Layer Type = "Quad" Name = "invmarch[4]" />
-	<Layer Type = "Quad" Name = "invmarch[5]" />
-	<Layer Type = "Quad" Name = "invmarch[6]" />
-	<Layer Type = "Quad" Name = "invmarch[7]" />
-	<Layer Type = "Quad" Name = "invmarch[8]" />
-	<Layer Type = "Quad" Name = "invmarch[9]" />
-	<Layer Type = "Quad" Name = "invmarch[10]" />
-	<Layer Type = "Quad" Name = "invmarch[11]" />
-	<Layer Type = "Quad" Name = "invmarch[12]" />
 
 	<Layer Type = "ActorFrameTexture" InitCommand = "%xero.aft" Name = "mang_aft1" />
 	
@@ -676,6 +751,8 @@ Type = "ActorFrame"
 	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="FishAft" />
 	<Layer Type="Sprite" Frag="shaders/fisheye.frag" InitCommand="%xero.sprite" Name="FishSprite"/>
 
+	<Layer File = "mang/elements/pieces.png" Name = "pieces[1]" />
+	<Layer File = "mang/elements/pieces.png" Name = "pieces[2]" />
 	<Layer File = "mang/elements/michealsoft.png" Type = "Sprite" Name = "micheal" />
 
 	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="vhsAft" />
