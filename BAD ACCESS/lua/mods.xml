@@ -93,6 +93,10 @@ windowsbg:xy(scx,scy)
 windowsbg:zoomto(sw,sh)
 windowsbg:diffuse(0,0.4,0.4,1)
 
+shamebg:hidden(0)
+shamebg:xy(scx,scy)
+shamebg:zoomto(sw,sh)
+
 vignette[1]:hidden(1)
 vignette[1]:blend('modulate')
 vignette[1]:xy(scx,scy)
@@ -284,6 +288,13 @@ FishSprite:GetShader():uniform1f('amount',0)
 vhsSprite:SetTexture(vhsAft:GetTexture())
 vhsSprite:hidden(1)
 
+heatSprite:SetTexture(heatAft:GetTexture())
+heatSprite:hidden(1)
+heatSprite:GetShader():uniform1f('exp',1)
+heatSprite:GetShader():uniform1f('yo',0)
+heatSprite:GetShader():uniform1f('tx',0)
+heatSprite:GetShader():uniform1f('ty',0)
+
 glitch2Sprite:SetTexture(glitch2Aft:GetTexture())
 glitch2Sprite:hidden(1)
 glitch2Sprite:SetTextureFiltering(false)
@@ -318,6 +329,7 @@ set{0,2,'xmod',
 	10,'stripeiterate',
 	10,'stripeiterate2',
 	1,'stripecrop2',
+	--0,'heat',
 	--scy*3,'stary',
 }
 
@@ -341,6 +353,16 @@ function crt(amt)
 end
 aux 'crt'
 node{'crt',crt}
+
+function heat(amt)
+	--heatSprite:diffusealpha(amt)
+	heatSprite:GetShader():uniform1f('yo',amt)
+	heatSprite:GetShader():uniform1f('tx',amt)
+	heatSprite:GetShader():uniform1f('ty',amt)
+	shamebg:diffusealpha(amt)
+end
+aux 'heat'
+node{'heat',heat,defer=true}
 
 --local functions
 --col specific alphastealth
@@ -697,6 +719,7 @@ Type = "ActorFrame"
 	<Layer Type = "Quad" Name = "load[1]" />
 	<Layer Type = "Quad" Name = "load[2]" />
 	<Layer File = "mang/elements/widnows.png" Name = "windows" />
+	<Layer File = "mang/elements/shamebg1.png" Name = "shamebg" />
 	<Layer Type = "ActorProxy" Name = "PC[1]" />
 	<Layer Type = "ActorProxy" Name = "PC[2]" />
 	<Layer Type = "ActorProxy" Name = "PJ[1]" />
@@ -761,6 +784,8 @@ Type = "ActorFrame"
 	<Layer Type="Sprite" Frag="shaders/glitch2.frag" InitCommand="%xero.sprite" Name="glitch2Sprite"/>
 	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="crtAft" />
 	<Layer Type="Sprite" Frag="shaders/crt.frag" InitCommand="%xero.sprite" Name="crtSprite"/>
+	<Layer Type="ActorFrameTexture" InitCommand="%xero.aft" Name="heatAft" />
+	<Layer Type="Sprite" Frag="shaders/heat.frag" InitCommand="%xero.sprite" Name="heatSprite"/>
 
 	<Layer File = "mang/elements/noise.png" Name = "noise" />
 
